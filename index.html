@@ -2,9 +2,33 @@
 <html>
     <head>
         <title>Track your productivity</title>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/switch.css">
+        <link rel="stylesheet" href="css/menu.css">
+        <link rel="stylesheet" href="css/sidebar.css">
     </head>
     <body>
-       
+	    <div class="wrapper">
+		    <div class="menu-container">
+				<div class="menu"></div>
+			</div>
+		    <div class="websites slide-out">
+			    <input type="text" class="website" placeholder="Insert a website" />
+			    <div class="switch">
+				    <input id="on" name="state-d" type="radio" checked="">
+				    <label for="on" onclick="">GOOD</label>
+				
+				    <input id="no" name="state-d" type="radio" checked="checked">
+				    <label for="no" onclick="">DON'T TRACK</label>
+				
+				    <input id="off" name="state-d" type="radio">
+				    <label for="off" onclick="">BAD</label>
+				
+				    <a></a>
+				</div>
+		    </div>
+	    </div>
+        <script src="js/main.js"></script>
     </body>
 </html>
