@@ -37,11 +37,33 @@
   border-bottom: solid 2px #c9c9c9;
   transition: border 0.3s;
   display: inline-block;
+  float:left;
   width:250px;
   margin-right:15px;
-  
+}
+.item{
+	overflow: hidden;
 }
 .website:focus{
   border-bottom: solid 2px #969696;
   outline: none;
+}
+.remove-item{
+	background: url(../images/remove.svg);
+	width: 48px;
+	height:48px;
+	display: inline-block;
+	float:right;
+	background-size: 48px 48px;
+	cursor: pointer;
+}
+.add-item{
+	background: url(../images/add.svg);
+	width: 48px;
+	height:48px;
+	display: block;
+	float:right;
+	background-size: 48px 48px;
+	cursor: pointer;
+	margin-top: 25px;
 }
