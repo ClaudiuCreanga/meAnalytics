@@ -3,7 +3,7 @@
 	position: absolute;
 	top:100px;
 	display:none;
-	height: 400px;
+	min-height: 400px;
 	overflow-y: scroll;
 	transform: translateX(-100%);
 	background: #EFEFEF;
@@ -44,6 +44,9 @@
 .item{
 	overflow: hidden;
 }
+.item:not(:nth-child(1)){
+	margin-top: 15px;
+}
 .website:focus{
   border-bottom: solid 2px #969696;
   outline: none;
@@ -56,6 +59,9 @@
 	float:right;
 	background-size: 48px 48px;
 	cursor: pointer;
+}
+.website-1 .remove-item{
+	display:none;
 }
 .add-item{
 	background: url(../images/add.svg);
