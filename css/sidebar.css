@@ -53,7 +53,7 @@
 }
 .remove-item{
 	background: url(../images/remove.svg);
-	width: 48px;
+	width: 48px; 
 	height:48px;
 	display: inline-block;
 	float:right;
