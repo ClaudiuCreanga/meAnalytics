@@ -62,6 +62,7 @@ add_item.addEventListener("click", function(e){
 		removable_item = new_item.querySelector('.remove-item');
 	remove_item(removable_item);
 	
+	new_item.querySelector('.website').value = '';
 	for(var i, i = 0; i < labels.length; i++){
 		inputs[i].id = inputs[i].id.replace(/[0-9]/g, +item_number+1);
 		inputs[i].name = inputs[i].name.replace(/[0-9]/g, +item_number+1);
