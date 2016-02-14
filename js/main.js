@@ -14,17 +14,6 @@ menu_container.addEventListener("click",function(e){
     websites.className = isOpen ? websites.className.replace('slide-in','slide-out') : websites.className.replace('slide-out','slide-in');
 },false);
 
-//get previously saved websites
-function getData(){
-	chrome.storage.sync.get('settings',function(object){
-		if(chrome.runtime.lastError){
-			console.log("Runtime error.");
-		}
-		console.log(object)
-	})
-}
-getData();
-
 //store the websites
 function storeData(){
 	chrome.storage.sync.set({'settings':settings}, function () {
@@ -32,10 +21,91 @@ function storeData(){
     });
 }
 
-//chrome.storage.sync.clear()
+//create the fields from previous saved settings
+function createFromSettings(settings){
+	container_items.innerHTML= "";
+	for(var key in settings.settings){
+		var div_name = settings.settings[key]["key"];
+		var type = settings.settings[key]["type"];
+		var website_name = settings.settings[key]["website"];
+		createElements(key,div_name,type,website_name);
+		console.log(website_name)
+	}
+}
+function createElements(key,div_name,type,website_name){
+	var div = document.createElement('div');
+	document.querySelector('.list-items').appendChild(div);
+	var item_number = key.match(/\d+$/);
+	div.className = div_name;
+	var input = document.createElement('input');
+	div.appendChild(input);
+	input.className = 'website';
+	input.value = website_name;
+	var div_switch = document.createElement('div');
+	div.appendChild(div_switch);
+	div_switch.className = 'switch';
+	var options = ["good","ignore","bad"];
+	
+	for(var i, i = 0; i < options.length; i++){
+		var input = document.createElement('input');
+		div_switch.appendChild(input);
+		var label = document.createElement('label');
+		div_switch.appendChild(label);
+		input.className = options[i];
+		input.name = "state-"+item_number;
+		input.type = "radio";
+		label.innerHTML = options[i].toUpperCase();
+		if(i == 0){
+			input.id = "on-"+item_number;
+			label.htmlFor = "on-"+item_number;
+			if(type == "good"){
+				input.checked = true
+			}
+		}
+		else if(i == 1){
+			input.id = "no-"+item_number;
+			label.htmlFor = "no-"+item_number;
+			if(type == "ignore"){
+				input.checked = true
+			}
+		}
+		else{
+			input.id = "off-"+item_number;
+			label.htmlFor = "off-"+item_number;
+			if(type == "bad"){
+				input.checked = true
+			}
+		}
+	}
+	var link = document.createElement('a');
+	div_switch.appendChild(link);
+	var remove = document.createElement('div');
+	div.appendChild(remove);
+	remove.className = 'remove-item';
+	
+}
 
-var settings = {};
-settings['website1'] = {};
+//get previously saved websites
+function getData(){
+	chrome.storage.sync.get('settings',function(object){
+		if(chrome.runtime.lastError){
+			console.log("Runtime error.");
+		}
+		var stored_data = object;
+		console.log(Object.keys(stored_data).length)
+		if(Object.keys(stored_data).length){
+			settings = stored_data;
+			createFromSettings(settings);
+		}
+		else{
+			settings = {};
+			settings['website1'] = {};
+		}
+	})	
+}
+getData()
+
+//chrome.storage.sync.clear()
 
 //listen to inputs and save the data
 var listenToNewWebsite = function(new_item,index){
@@ -54,7 +124,7 @@ var listenToNewWebsite = function(new_item,index){
 		storeData();
 	},false);
 	
-	options = ["good","ignore","bad"];
+	var options = ["good","ignore","bad"];
 	
 	for(var i, i = 0; i < options.length; i++){
 		new_item.querySelector('.'+options[i]).addEventListener('click', function(){
