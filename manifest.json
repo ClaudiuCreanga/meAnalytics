@@ -14,8 +14,13 @@
         "newtab" : "index.html"
     },
     
+    "background": {
+        "scripts": ["js/collectData.js"]
+    },
+    
 	"permissions": [
 		"activeTab",
+		"tabs",
 		"https://ajax.googleapis.com/",
 		"storage"
 	]

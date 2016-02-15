@@ -1,3 +1,5 @@
+/********** HANDLE USER SETTINGS *************/
+
 var menu = document.querySelector('.menu');
 	menu_container = document.querySelector('.menu-container');
 	websites = document.querySelector('.websites');
@@ -178,4 +180,3 @@ add_item.addEventListener("click", function(e){
 	listenToNewWebsite(new_item,index);
 		
 },false);
-
