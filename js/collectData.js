@@ -1,14 +1,27 @@
 /********** HANDLE THE DATA *************/
 
+//set up the globals
 var history = {};
 	activeUrl = "";
 	ignored_websites = new Array();
 	isUserActive = true;
 	timeOnWebsite = 0;
+	today = getToday();
 	
+/*
+ * @desc boot up the whole thing
+*/
 function start(){
 	getToday();
+	registerEvents();
+	getIgnoredWebsites();
 }
+start();
+
+/*
+ * @desc saves objects based on dates
+ * @return a date as 15/2/2016
+*/
 function getToday(){
 	var currentDate = new Date();
 	var day = currentDate.getDate();
@@ -17,40 +30,60 @@ function getToday(){
 	var today = day+"/"+month+"/"+year;
 	return today;
 }
-var today = getToday();
 
+/*
+ * @desc checks the date and processes the data, url and time, calls saveHistory()
+ * @param object activeTab - the currently actived tab
+*/
 function checkDate(activeTab){
 	if(activeTab){
-		console.log(timeOnWebsite)
+		var base_url = getBaseDomain(activeTab.url);
 		if(history[today]){
-			if(history[today][getBaseDomain(activeTab.url)] == activeTab.url){
-				history[today][getBaseDomain(activeTab.url)]['url'] = getBaseDomain(activeTab.url);
-				history[today][getBaseDomain(activeTab.url)]['time'] = parseInt(history[today][getBaseDomain(activeTab.url)]['time'])+timeOnWebsite;
+			if(history[today][base_url]){
+				history[today][base_url]['url'] = base_url;
+				history[today][base_url]['time'] = parseInt(history[today][base_url]['time'])+timeOnWebsite;
 			}
 			else{
-				history[today][getBaseDomain(activeTab.url)] = {};
-				history[today][getBaseDomain(activeTab.url)]['url'] = getBaseDomain(activeTab.url);
-				history[today][getBaseDomain(activeTab.url)]['time'] = timeOnWebsite;
+				history[today][base_url] = {};
+				history[today][base_url]['url'] = base_url;
+				history[today][base_url]['time'] = timeOnWebsite;
 			}
 		}else{
 			history[today] = {};
-			history[today][getBaseDomain(activeTab.url)] = {};
-			history[today][getBaseDomain(activeTab.url)]['url'] = getBaseDomain(activeTab.url);
-			history[today][getBaseDomain(activeTab.url)]['time'] = timeOnWebsite;
+			history[today][base_url] = {};
+			history[today][base_url]['url'] = base_url;
+			history[today][base_url]['time'] = timeOnWebsite;
+		}
+		if(!isInArray(base_url,ignored_websites)){
+			saveHistory();
 		}
 	}
-	saveHistory()
 }
 
+/*
+ * @desc main function called by the events on user action. 
+ * gets activeTab object containing data about the active tab and calls checkDate()
+ * @return void 
+*/
 function getActiveTab(){
-	chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
-	
+	chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {	
 		var activeTab = arrayOfTabs[0];
-		checkDate(activeTab);	
-		
+		checkDate(activeTab);			
 	});
 }
 
+/*
+ * @desc saves the object history, organized by dates in this format
+ * 15/2/2016: Object
+ * 	 stackoverflow.com: Object
+ *		time: 15
+ *		url: "stackoverflow.com"
+ * 	 github.com: Object
+ * 		time: 5
+ *		url: "github.com"
+ * resets the timer to 0 after data is saved.
+ * @return void 
+*/
 function saveHistory(){
 	chrome.storage.sync.set({'history':history}, function () {
         console.log('Saved', history);
@@ -58,46 +91,74 @@ function saveHistory(){
     });
 }
 
-registerEvents();
+/*
+ * @desc registers user action events on browser: changing tab, changing window, browser out of focus 
+ * has an interval of 1 second where it checks if the browser is focused and updates the timeOnWebsite
+ * @return void 
+*/
 function registerEvents(){
-    chrome.tabs.onActivated.addListener(function(activeInfo) {
+	
+	// Fired when the active tab in a window changes
+    chrome.tabs.onActivated.addListener(function() {
+        isUserActive = true;
 		getActiveTab();
     });
 
-    // Registering for onChanged event
-    // This is fired when the url of a tab changes
-    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    // Fired when the url of a tab changes
+    chrome.tabs.onUpdated.addListener(function() {
+        isUserActive = true;
 		getActiveTab();
     });
 
-    // Registering for onFocusChanged event
-    // This is fired when the active chrome window is changed.
+    // Fired when the active chrome window is changed.
     chrome.windows.onFocusChanged.addListener(function(windowId) {
-        // This happens if all the windows are out of focus
-        // Using this condition to infer that the user is inactive
-        if (windowId === chrome.windows.WINDOW_ID_NONE) {
-            //	isUserActive = false;
-        } else {
-            isUserActive = true;
-        }
 		getActiveTab();
     });
     
-    window.setInterval(updateTime, 1000);  
+    window.setInterval(function(){
+	    checkBrowserFocus(),
+	    updateTime()
+    }, 1000);  
 }
 
+/*
+ * @desc gets the domain of the active website 
+ * @return string 
+*/
 function getActiveWebsite() {
     return getBaseDomain(activeUrl);
 }
 
+/*
+ * @desc check every second if the browser is in focus and sets the isUserActive to false or true
+ * @return void
+*/
+function checkBrowserFocus(){
+	chrome.windows.getCurrent(function(windows){
+		(windows.focused == false) ? isUserActive = false : isUserActive = true;
+	})
+}
 
+/*
+ * @desc called every second in registerEvents(). 
+ * Gets the active website and checks if it is in the ignore list. 
+ * If not, it updates the timeOnWebsite every second. 
+ * @return void
+*/
 function updateTime() {
     var current_website = getActiveWebsite();  
     if(isUserActive && !isInArray(current_website,ignored_websites)){
         timeOnWebsite += 1; 
+        console.log(timeOnWebsite);
     }
 }
 
+/*
+ * @desc gets the ignored websites set up by user in settings.
+ * Pusshes the websites into a global array ignored_websites
+ * @requires object settings from main.js
+ * @return void
+*/
 function getIgnoredWebsites(){
 	chrome.storage.sync.get('settings',function(object){
 		if(chrome.runtime.lastError){
@@ -111,16 +172,15 @@ function getIgnoredWebsites(){
 				}
 			}
 		}
-		ignoreWebsites(ignored_websites)
 	})	
 }
-getIgnoredWebsites()
 
-function ignoreWebsites(ignored_websites){
-	console.log(ignored_websites);
-}
-
-//get the domain name from string
+/*
+ * @desc get the domain name from string.
+ * http://github.com/ClaudiuCreanga becomes github.com
+ * @param string url
+ * @return string
+*/
 function getBaseDomain(url) {
     // Remove http and www
     var strList = url.split(":\/\/");
@@ -136,7 +196,11 @@ function getBaseDomain(url) {
     return domainName[0];
 }
 
-//check if element is in array
+/*
+ * @desc check if element is in array
+ * @param string,array
+ * @return true/false
+*/
 function isInArray(value, array) {
   return array.indexOf(value) > -1;
 }
