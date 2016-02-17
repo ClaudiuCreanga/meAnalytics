@@ -7,6 +7,7 @@ var history = {};
 	isUserActive = true;
 	timeOnWebsite = 0;
 	today = getToday();
+	previous_tab = "";
 	
 /*
  * @desc boot up the whole thing
@@ -15,9 +16,17 @@ function start(){
 	getToday();
 	registerEvents();
 	getIgnoredWebsites();
+	getPreviousTab();
 }
 start();
 
+
+function getPreviousTab(){
+	chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {	
+		previous_tab = arrayOfTabs[0].url;
+		console.log(previous_tab)
+	});
+}
 /*
  * @desc saves objects based on dates
  * @return a date as 15/2/2016
@@ -37,7 +46,8 @@ function getToday(){
 */
 function checkDate(activeTab){
 	if(activeTab){
-		var base_url = getBaseDomain(activeTab.url);
+		var base_url = getBaseDomain(previous_tab);
+		console.log(base_url);
 		if(history[today]){
 			if(history[today][base_url]){
 				history[today][base_url]['url'] = base_url;
@@ -57,6 +67,8 @@ function checkDate(activeTab){
 		if(!isInArray(base_url,ignored_websites)){
 			saveHistory();
 		}
+		previous_tab = activeTab.url;
+		console.log(previous_tab)
 	}
 }
 
@@ -112,7 +124,7 @@ function registerEvents(){
 
     // Fired when the active chrome window is changed.
     chrome.windows.onFocusChanged.addListener(function(windowId) {
-		getActiveTab();
+		//getActiveTab();
     });
     
     window.setInterval(function(){
@@ -184,11 +196,7 @@ function getIgnoredWebsites(){
 function getBaseDomain(url) {
     // Remove http and www
     var strList = url.split(":\/\/");
-    if (strList.length > 1) {
-        url = strList[1];
-    } else {
-        url = strList[0];
-    }
+    (strList.length > 1) ? url = strList[1] : url = strList[0];
     url = url.replace(/www\./g,'');
     
     // Return just the domain
