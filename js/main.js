@@ -6,6 +6,7 @@ var menu = document.querySelector('.menu');
 	add_item = document.querySelector('.add-item');
 	container_items = document.querySelector('.list-items');
 	first_item = document.querySelector('.list-items .website-1');
+	settings = {};
 	
 //toggle the menu
 menu_container.addEventListener("click",function(e){
@@ -96,15 +97,15 @@ function getData(){
 			console.log("Runtime error.");
 		}
 		var stored_data = object;
-		console.log(Object.keys(stored_data).length)
-		if(Object.keys(stored_data).length){
-			settings = stored_data['settings'];
-			createFromSettings(settings);
-		}
-		else{
-			settings = {};
-			settings['website1'] = {};
-			listenToNewWebsite(first_item);
+		if(stored_data){
+			if(Object.keys(stored_data).length){
+				settings = stored_data['settings'];
+				createFromSettings(settings);
+			}
+			else{
+				settings['website1'] = {};
+				listenToNewWebsite(first_item);
+			}
 		}
 	})	
 }

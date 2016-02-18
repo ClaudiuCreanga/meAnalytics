@@ -1,18 +1,19 @@
 /********** HANDLE THE DATA *************/
 
 //set up the globals
-var history = {};
-	activeUrl = "";
+var	activeUrl = "";
 	ignored_websites = new Array();
 	isUserActive = true;
 	timeOnWebsite = 0;
-	today = getToday();
+	today = "";
 	previous_tab = "";
+	stored_history = {};
 	
 /*
  * @desc boot up the whole thing
 */
 function start(){
+	getSavedData();
 	getToday();
 	registerEvents();
 	getIgnoredWebsites();
@@ -20,11 +21,22 @@ function start(){
 }
 start();
 
+function getSavedData(){
+	
+	chrome.storage.sync.get('stored_history',function(object){
+		if(chrome.runtime.lastError){
+			console.log("Runtime error.");
+		}
+		var stored_data = object;
+		if(stored_data){
+			Object.keys(stored_data).length ? stored_history = stored_data['stored_history'] : '';
+		}
+	})
+}
 
 function getPreviousTab(){
 	chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {	
 		previous_tab = arrayOfTabs[0].url;
-		console.log(previous_tab)
 	});
 }
 /*
@@ -36,39 +48,36 @@ function getToday(){
 	var day = currentDate.getDate();
 	var month = currentDate.getMonth() + 1;
 	var year = currentDate.getFullYear();
-	var today = day+"/"+month+"/"+year;
-	return today;
+	today = day+"/"+month+"/"+year;
 }
 
 /*
- * @desc checks the date and processes the data, url and time, calls saveHistory()
+ * @desc checks the date and processes the data, url and time, calls savestored_history()
  * @param object activeTab - the currently actived tab
 */
 function checkDate(activeTab){
 	if(activeTab){
 		var base_url = getBaseDomain(previous_tab);
-		console.log(base_url);
-		if(history[today]){
-			if(history[today][base_url]){
-				history[today][base_url]['url'] = base_url;
-				history[today][base_url]['time'] = parseInt(history[today][base_url]['time'])+timeOnWebsite;
+		if(stored_history[today]){
+			if(stored_history[today][base_url]){
+				stored_history[today][base_url]['url'] = base_url;
+				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
 			}
 			else{
-				history[today][base_url] = {};
-				history[today][base_url]['url'] = base_url;
-				history[today][base_url]['time'] = timeOnWebsite;
+				stored_history[today][base_url] = {};
+				stored_history[today][base_url]['url'] = base_url;
+				stored_history[today][base_url]['time'] = timeOnWebsite;
 			}
 		}else{
-			history[today] = {};
-			history[today][base_url] = {};
-			history[today][base_url]['url'] = base_url;
-			history[today][base_url]['time'] = timeOnWebsite;
+			stored_history[today] = {};
+			stored_history[today][base_url] = {};
+			stored_history[today][base_url]['url'] = base_url;
+			stored_history[today][base_url]['time'] = timeOnWebsite;
 		}
 		if(!isInArray(base_url,ignored_websites)){
-			saveHistory();
+			savestored_history();
 		}
 		previous_tab = activeTab.url;
-		console.log(previous_tab)
 	}
 }
 
@@ -85,7 +94,7 @@ function getActiveTab(){
 }
 
 /*
- * @desc saves the object history, organized by dates in this format
+ * @desc saves the object stored_history, organized by dates in this format
  * 15/2/2016: Object
  * 	 stackoverflow.com: Object
  *		time: 15
@@ -96,9 +105,9 @@ function getActiveTab(){
  * resets the timer to 0 after data is saved.
  * @return void 
 */
-function saveHistory(){
-	chrome.storage.sync.set({'history':history}, function () {
-        console.log('Saved', history);
+function savestored_history(){
+	chrome.storage.sync.set({'stored_history':stored_history}, function () {
+        console.log('Saved', stored_history);
         timeOnWebsite = 0;
     });
 }
@@ -126,6 +135,10 @@ function registerEvents(){
     chrome.windows.onFocusChanged.addListener(function(windowId) {
 		//getActiveTab();
     });
+    
+    window.setInterval(function(){
+	    getToday()
+    }, 60000);  
     
     window.setInterval(function(){
 	    checkBrowserFocus(),
@@ -177,10 +190,12 @@ function getIgnoredWebsites(){
 			console.log("Runtime error.");
 		}
 		var stored_data = object.settings;
-		if(Object.keys(stored_data).length){
-			for(var key in stored_data){
-				if(stored_data[key]['type'] == 'ignore'){
-					ignored_websites.push(stored_data[key]["website"]);
+		if(stored_data){
+			if(Object.keys(stored_data).length){
+				for(var key in stored_data){
+					if(stored_data[key]['type'] == 'ignore'){
+						ignored_websites.push(stored_data[key]["website"]);
+					}
 				}
 			}
 		}
