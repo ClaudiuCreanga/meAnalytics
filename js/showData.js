@@ -94,7 +94,7 @@ function getTimeSpentOnWebsites(){
 
 /*
  * @desc process the website and gives the color based on type property.
- * @param website
+ * @param string
  * @return string
 */
 function getWebsiteColor(website){
@@ -112,7 +112,7 @@ function getWebsiteColor(website){
 
 /*
  * @desc process the column colors.
- * @param color
+ * @param string
  * @return string
 */
 function processColors(color){
@@ -125,7 +125,7 @@ function processColors(color){
 
 /*
  * @desc creates the charts from variable time.
- * @param time
+ * @param array
  * @return void
 */
 function createCharts(time){
