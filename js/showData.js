@@ -1,38 +1,69 @@
-var today = getToday();
-	settings = {};
+/********** SHOW THE DATA *************/
 
-chrome.storage.sync.get('stored_history',function(object){
-	if(chrome.runtime.lastError){
-		console.log("Runtime error.");
-	}
-	var stored_data = object;
-	if(stored_data){
-		if(Object.keys(stored_data).length){
-			var stored_history = stored_data['stored_history'];
-			console.log(stored_history)
-			relevant_time(stored_history);
-		}
-		else{
-			d3.select(".main-data")
-				.append("h1")
-				.text("You don't have any data yet today. Get on the net!")
-		}
-	}
-})
+//set up the globals
 
-chrome.storage.sync.get('settings',function(object){
-	if(chrome.runtime.lastError){
-		console.log("Runtime error.");
-	}
-	var stored_settings = object;
-	if(stored_settings){
-		if(Object.keys(stored_settings).length){
-			settings = stored_settings['settings'];
-			console.log(settings)
-		}
-	}
-})
 	
+/*
+ * @desc boot up the whole thing
+*/
+function start(){
+	getStoredHistory();
+	getUserSettings();
+}
+start();
+
+/*
+ * @desc gets the stored history.
+ * calls getTimeSpentOnWebsites()
+ * @requires object stored_history from collectData.js
+ * @return void
+*/
+function getStoredHistory(){
+	chrome.storage.sync.get('stored_history',function(object){
+		if(chrome.runtime.lastError){
+			console.log("Runtime error.");
+		}
+		var stored_data = object;
+		if(stored_data){
+			if(Object.keys(stored_data).length){
+				var stored_history = stored_data['stored_history'];
+				console.log(stored_history)
+				getTimeSpentOnWebsites(stored_history);
+			}
+			else{
+				d3.select(".main-data")
+					.append("h1")
+					.text("You don't have any data yet today. Get on the net!")
+			}
+		}
+	})
+}
+
+/*
+ * @desc gets the ignored websites set up by user in settings.
+ * Pusshes the websites into a global array ignored_websites
+ * @requires object settings from main.js
+ * @return void
+*/
+function getUserSettings(){
+	chrome.storage.sync.get('settings',function(object){
+		if(chrome.runtime.lastError){
+			console.log("Runtime error.");
+		}
+		var stored_settings = object;
+		if(stored_settings){
+			if(Object.keys(stored_settings).length){
+				var settings = stored_settings['settings'];
+				columnColor(settings);
+			}
+		}
+	})
+}
+
+/*
+ * @desc calculate today
+ * @return a date as 15/2/2016
+*/	
 function getToday(){
 	var currentDate = new Date();
 	var day = currentDate.getDate();
@@ -42,9 +73,15 @@ function getToday(){
 	return today;
 }
 
-function relevant_time(stored_history){
+/*
+ * @desc process the user history and gets time spent on websites
+ * @param stored_history
+ * @calls createCharts()
+*/
+function getTimeSpentOnWebsites(stored_history){
 	
 	var time = new Array;
+	var today = getToday();
 	
 	for (key of Object.keys(stored_history[today])) {
 		val = stored_history[today][key]['time'];
@@ -55,12 +92,17 @@ function relevant_time(stored_history){
 	
 }
 
-function columnColor(){
+function columnColor(settings){
 	var good = "#418486";
 	var bad = "#9A3334";
 	var neutral = "#EFEFEF";
 }
 
+/*
+ * @desc creates the charts from variable time.
+ * @param time
+ * @return void
+*/
 function createCharts(time){
 	
 	var data = time;
