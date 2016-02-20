@@ -5,6 +5,9 @@
     line-height: 1.8;
     color: #505050;
 }
-
+#chartarea{
+	height: 400px;
+	width: 600px;
+}
 
 
