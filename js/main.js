@@ -27,13 +27,11 @@ function storeData(){
 //create the fields from previous saved settings
 function createFromSettings(settings){
 	container_items.innerHTML= "";
-	console.log(settings)
 	for(var key in settings){
 		var div_name = settings[key]["key"];
 		var type = settings[key]["type"];
 		var website_name = settings[key]["website"];
 		createElements(key,div_name,type,website_name);
-		console.log(website_name)
 	}
 }
 function createElements(key,div_name,type,website_name){
@@ -147,7 +145,6 @@ var remove_item = function(removable_item,index){
 	removable_item.addEventListener('click', function(e){
 		removable_item.parentElement.remove();
 		var key = removable_item.parentElement.className;
-		console.log(key);
 		delete settings[index];
 		storeData();
 	},false);

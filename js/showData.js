@@ -1,7 +1,8 @@
 /********** SHOW THE DATA *************/
 
 //set up the globals
-
+var settings = {}
+	stored_history = {}
 	
 /*
  * @desc boot up the whole thing
@@ -26,9 +27,9 @@ function getStoredHistory(){
 		var stored_data = object;
 		if(stored_data){
 			if(Object.keys(stored_data).length){
-				var stored_history = stored_data['stored_history'];
+				stored_history = stored_data['stored_history'];
 				console.log(stored_history)
-				getTimeSpentOnWebsites(stored_history);
+				getTimeSpentOnWebsites();
 			}
 			else{
 				d3.select(".main-data")
@@ -53,8 +54,7 @@ function getUserSettings(){
 		var stored_settings = object;
 		if(stored_settings){
 			if(Object.keys(stored_settings).length){
-				var settings = stored_settings['settings'];
-				columnColor(settings);
+				settings = stored_settings['settings'];
 			}
 		}
 	})
@@ -78,7 +78,7 @@ function getToday(){
  * @param stored_history
  * @calls createCharts()
 */
-function getTimeSpentOnWebsites(stored_history){
+function getTimeSpentOnWebsites(){
 	
 	var time = new Array;
 	var today = getToday();
@@ -92,10 +92,35 @@ function getTimeSpentOnWebsites(stored_history){
 	
 }
 
-function columnColor(settings){
+/*
+ * @desc process the website and gives the color based on type property.
+ * @param website
+ * @return string
+*/
+function getWebsiteColor(website){
+	for(key of Object.keys(settings)){
+		if(settings[key]['website'] == website){
+			color = settings[key]['type'];
+			break;
+		}
+		else{
+			color = "neutral";
+		}
+	}
+	return processColors(color);
+}
+
+/*
+ * @desc process the column colors.
+ * @param color
+ * @return string
+*/
+function processColors(color){
 	var good = "#418486";
 	var bad = "#9A3334";
 	var neutral = "#EFEFEF";
+	type = color == "bad" ? bad : (color == "good" ? good : neutral);
+	return type; 
 }
 
 /*
@@ -108,6 +133,7 @@ function createCharts(time){
 	var data = time;
 	var height = 400;
 	var width = 600;
+	var today = getToday();
 	var barPadding = 2;
 	var barWidth = (width / data.length) - barPadding;
 	
@@ -138,7 +164,7 @@ function createCharts(time){
 			return xScale.rangeBand()
 		})
 		.attr("fill", function (d, i) {
-			return '#418486'
+			return getWebsiteColor(Object.keys(stored_history[today])[i])
 		})
 		.attr("height", 0)
 		.transition()
@@ -152,4 +178,13 @@ function createCharts(time){
 		.attr("height", function (d, i) {
 			return yScale(d);
 		});
+}
+
+/*
+ * @desc check if element is in array
+ * @param string,array
+ * @return true/false
+*/
+function isInArray(value, array) {
+  return array.indexOf(value) > -1;
 }
