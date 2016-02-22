@@ -5,9 +5,31 @@
     line-height: 1.8;
     color: #505050;
 }
+html,
+body,
+.wrapper{
+	height:100%;
+}
 #chartarea{
 	height: 400px;
 	width: 600px;
 }
-
-
+.main-data{
+	width:100%;
+	display:flex;
+	justify-content: center;
+	align-items: flex-end;
+	height:calc(100% - 100px);
+}
+svg{
+	cursor: pointer;
+}
+.hover{
+	paint-order: stroke;
+	stroke-width: 2;
+	stroke: #505050;
+	stroke-linejoin="round"
+}
+.normal{
+	paint-order: normal;
+}
