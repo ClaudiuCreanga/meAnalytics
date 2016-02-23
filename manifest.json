@@ -11,11 +11,11 @@
 	},
 	
     "chrome_url_overrides":{
-        "newtab" : "index.html"
+        "newtab" : "dist/index.html"
     },
     
     "background": {
-        "scripts": ["js/collectData.js"]
+        "scripts": ["src/js/collectData.js"]
     },
     
 	"permissions": [

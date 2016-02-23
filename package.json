@@ -1,0 +1,21 @@
+{
+  "name": "meAnalytics",
+  "description":"Gather all the data about yourself in one place",
+  "version": "0.1.0",
+  "repository":"private",
+  "license":"MIT",
+  "person": { 
+	"name" : "Claudiu Creanga",
+	"url" : "http://claudiucreanga.me/"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-nodeunit": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-htmlmin": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-concat": "*"
+  }
+}

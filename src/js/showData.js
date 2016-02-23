@@ -167,8 +167,12 @@ function createCharts(time){
 			return getWebsiteColor(Object.keys(stored_history[today])[i])
 		})
 		.attr("height", 0)
-		.on('mouseover', function(d){
-		    d3.select(this).classed("hover",true)
+		.on('mouseover', function(d,i){
+		    d3.select(this)
+		    	.classed("hover",true)
+		    d3.select(".info")
+		    	.append("p")
+		    	.text("Website: ")
 		})
 		.on('mouseout', function(d){
 		    d3.select(this).attr("class","normal")

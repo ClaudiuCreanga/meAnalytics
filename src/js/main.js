@@ -28,9 +28,9 @@ function storeData(){
 function createFromSettings(settings){
 	container_items.innerHTML= "";
 	for(var key in settings){
-		var div_name = settings[key]["key"];
-		var type = settings[key]["type"];
-		var website_name = settings[key]["website"];
+		var div_name = settings[key].key;
+		var type = settings[key].type;
+		var website_name = settings[key].website;
 		createElements(key,div_name,type,website_name);
 	}
 }
@@ -57,25 +57,25 @@ function createElements(key,div_name,type,website_name){
 		input.name = "state-"+item_number;
 		input.type = "radio";
 		label.innerHTML = options[i].toUpperCase();
-		if(i == 0){
+		if(i === 0){
 			input.id = "on-"+item_number;
 			label.htmlFor = "on-"+item_number;
 			if(type == "good"){
-				input.checked = true
+				input.checked = true;
 			}
 		}
 		else if(i == 1){
 			input.id = "no-"+item_number;
 			label.htmlFor = "no-"+item_number;
 			if(type == "ignore"){
-				input.checked = true
+				input.checked = true;
 			}
 		}
 		else{
 			input.id = "off-"+item_number;
 			label.htmlFor = "off-"+item_number;
 			if(type == "bad"){
-				input.checked = true
+				input.checked = true;
 			}
 		}
 	}
@@ -101,13 +101,13 @@ function getData(){
 				createFromSettings(settings);
 			}
 			else{
-				settings['website1'] = {};
+				settings.website1 = {};
 				listenToNewWebsite(first_item);
 			}
 		}
-	})	
+	});	
 }
-getData()
+getData();
 
 //chrome.storage.sync.clear()
 
@@ -123,8 +123,8 @@ var listenToNewWebsite = function(new_item,index){
 	new_website.addEventListener('keyup', function(){
 		var input_value = this.value;
 		var key = this.parentElement.className;
-		settings[index]["key"] = key;
-		settings[index]["website"] = input_value;
+		settings[index].key = key;
+		settings[index].website = input_value;
 		storeData();
 	},false);
 	
@@ -133,11 +133,11 @@ var listenToNewWebsite = function(new_item,index){
 	for(var i, i = 0; i < options.length; i++){
 		new_item.querySelector('.'+options[i]).addEventListener('click', function(){
 			if(this.checked){
-				settings[index]["type"] = this.className;
+				settings[index].type = this.className;
 				storeData();
 			}
-		})
-	}
+		});
+	;}
 }
 
 //remove the input fields and delete the data associated with that input
@@ -148,7 +148,7 @@ var remove_item = function(removable_item,index){
 		delete settings[index];
 		storeData();
 	},false);
-}
+};
 
 //attach click events to inputs
 add_item.addEventListener("click", function(e){
