@@ -28,7 +28,7 @@ function getStoredHistory(){
 		if(stored_data){
 			if(Object.keys(stored_data).length){
 				stored_history = stored_data['stored_history'];
-				console.log(stored_history)
+				console.log(d3.entries(stored_history[getToday()]))
 				getTimeSpentOnWebsites();
 			}
 			else{
@@ -83,12 +83,15 @@ function getTimeSpentOnWebsites(){
 	var time = new Array;
 	var today = getToday();
 	
+/*
+	
 	for (key of Object.keys(stored_history[today])) {
 		val = stored_history[today][key]['time'];
 	    time.push(val);
 	}
+*/
 	
-	createCharts(time);
+	createCharts(d3.entries(stored_history[today]));
 	
 }
 
@@ -130,9 +133,11 @@ function processColors(color){
 */
 function createCharts(time){
 	
-	var data = time;
-	var height = 400;
-	var width = 600;
+	var data = time.map(function(obj){ 
+		return obj.value.time 
+	});
+	var height = 500;
+	var width = 800;
 	var today = getToday();
 	var barPadding = 2;
 	var barWidth = (width / data.length) - barPadding;
@@ -164,15 +169,18 @@ function createCharts(time){
 			return xScale.rangeBand()
 		})
 		.attr("fill", function (d, i) {
-			return getWebsiteColor(Object.keys(stored_history[today])[i])
+			return getWebsiteColor(time[i].key)
 		})
 		.attr("height", 0)
 		.on('mouseover', function(d,i){
 		    d3.select(this)
 		    	.classed("hover",true)
+	    	d3.select(".info p").remove()
 		    d3.select(".info")
 		    	.append("p")
-		    	.text("Website: ")
+		    	.text(time[i].key)
+		    	.append("p")
+		    	.text(time[i].value.time)
 		})
 		.on('mouseout', function(d){
 		    d3.select(this).attr("class","normal")
