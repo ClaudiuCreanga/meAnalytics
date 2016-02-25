@@ -3,11 +3,26 @@
 	width: 800px;
 	position:relative;
 }
+#individual-website{
+	opacity:0;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 960px;
+    height: 565px;
+    margin-top: -275px;
+    margin-left: -485px;
+    text-align: center;
+    background: #FFFDF6;
+    z-index: 2;
+    p{
+	    text-align: center;
+	    margin:10 auto;
+    }
+}
 .hover{
-	paint-order: stroke;
-	stroke-width: 2;
-	stroke: #505050;
-	stroke-linejoin="round"
+	paint-order: fill;
+	fill: #48B2C3;
 }
 .normal{
 	paint-order: normal;
@@ -18,6 +33,14 @@
 	box-shadow: 0 1px 1px 0 #C7C7C7 inset;
 	background: none repeat scroll 0 0 #E9E9E9;
 	padding:10px;
+	text-align: center;
+	z-index:1;
+	width: 140px;
+	height: 92px;
+	display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
 }
 svg {
   font: 10px sans-serif;
@@ -30,7 +53,7 @@ path.line {
 }
 
 path.area {
-  fill: #e7e7e7;
+  fill: #48B2C3;
 }
 
 .axis {
@@ -38,7 +61,7 @@ path.area {
 }
 
 .x.axis line {
-  stroke: #fff;
+  stroke: #FFFDF6;
 }
 
 .x.axis .minor {

@@ -8,6 +8,7 @@
 	transform: translateX(-100%);
 	background: #EFEFEF;
 	padding: 20px;
+	z-index: 3;
 }
 .websites.active{
 	display: block;

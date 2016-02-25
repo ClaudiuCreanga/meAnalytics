@@ -28,7 +28,6 @@ function getStoredHistory(){
 		if(stored_data){
 			if(Object.keys(stored_data).length){
 				stored_history = stored_data['stored_history'];
-				console.log(d3.entries(stored_history[getToday()]))
 				getTimeSpentOnWebsites();
 			}
 			else{
@@ -120,7 +119,7 @@ function getSpecificWebsiteData(website){
 	for(i in stored_history){
 		for(key of Object.keys(stored_history[i])){
 			if(stored_history[i][key]['url'] == website){
-				data.push({'date':i,'time':stored_history[i][key]['url']});
+				data.push({'date':i,'time':stored_history[i][key]['time']});
 			}
 		}
 	}
@@ -130,18 +129,14 @@ function getSpecificWebsiteData(website){
 
 function getIndividualWebsiteGraph(website){
 	
-	var data = getSpecificWebsiteData(website)
-		console.log(data);
-	
-	
-	var margin = {top: 40, right: 40, bottom: 40, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+	var data = getSpecificWebsiteData(website);		
+		margin = {top: 20, right: 40, bottom: 20, left: 20},
+		width = 960 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
+		parse = d3.time.format("%d/%m/%Y").parse;
+		
+	data.forEach(type);
 
-	//var parse = d3.time.format("%b %Y").parse;
-	var parse = d3.time.format("%d/%m/%Y").parse;
-
-	
 	var x = d3.time.scale()
 	    .range([0, width]);
 	
@@ -156,9 +151,13 @@ function getIndividualWebsiteGraph(website){
 	    .scale(y)
 	    .ticks(4)
 	    .orient("right");
-	
-	data.forEach(type);
-	
+	    
+	var area = d3.svg.area()
+		.interpolate("monotone")
+		.x(function(d) { return x(d.date); })
+		.y0(height)
+		.y1(function(d) { return y(d.time); });
+		
 	var line = d3.svg.line()
 	    .interpolate("monotone")
 	    .x(function(d) { return x(d.date); })
@@ -167,65 +166,66 @@ function getIndividualWebsiteGraph(website){
 	var svg = d3.select("#individual-website").append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
+	    .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
 	svg.append("clipPath")
 	    .attr("id", "clip")
-	  .append("rect")
+	    .append("rect")
 	    .attr("width", width)
 	    .attr("height", height);
-
-
-  // Compute the minimum and maximum date, and the maximum time.
-  x.domain([data[0].date, data[data.length - 1].date]);
-  y.domain([0, d3.max(data, function(d) { return d.time; })]).nice();
-
-  svg
-      .datum(data)
-      .on("click", click);
-
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .attr("transform", "translate(" + width + ",0)")
-      .call(yAxis);
-
-  svg.append("path")
-      .attr("class", "line")
-      .attr("clip-path", "url(#clip)")
-      .attr("d", line);
-      
-
-  svg.append("text")
-      .attr("x", width - 6)
-      .attr("y", height - 6)
-      .style("text-anchor", "end")
-
- // On click, update the x-axis.
-  function click() {
-    var n = data.length - 1,
-        i = Math.floor(Math.random() * n / 2),
-        j = i + Math.floor(Math.random() * n / 2) + 1;
-    x.domain([data[i].date, data[j].date]);
-    var t = svg.transition().duration(750);
-    t.select(".x.axis").call(xAxis);
-    t.select(".area").attr("d", area);
-    t.select(".line").attr("d", line);
-  }
-  
-  // Parse dates and numbers. We assume values are sorted by date.
-// Also filter to one symbol; the S&P 500.
-function type(d) {
-  d.date = parse(d.date);
-  d.time = +d.time;
-  return d;
-}	
+	
+	// Compute the minimum and maximum date, and the maximum time.
+	x.domain([data[0].date, data[data.length - 1].date]);
+	y.domain([0, d3.max(data, function(d) { return d.time; })]).nice();
+	
+	svg
+	  .datum(data)
+	  .on("click", click);
+	
+	svg.append("path")
+	  .attr("class", "area")
+	  .attr("clip-path", "url(#clip)")
+	  .attr("d", area);
+	
+	svg.append("g")
+	  .attr("class", "x axis")
+	  .attr("transform", "translate(0," + height + ")")
+	  .call(xAxis);
+	
+	svg.append("g")
+	  .attr("class", "y axis")
+	  .attr("transform", "translate(" + width + ",0)")
+	  .call(yAxis);
+	
+	svg.append("path")
+	  .attr("class", "line")
+	  .attr("clip-path", "url(#clip)")
+	  .attr("d", line);
+	
+	svg.append("text")
+	  .attr("x", width - 6)
+	  .attr("y", height - 6)
+	  .style("text-anchor", "end")
+	
+	// On click, update the x-axis.
+	function click() {
+		var n = data.length - 1,
+		    i = Math.floor(Math.random() * n / 2),
+		    j = i + Math.floor(Math.random() * n / 2) + 1;
+		x.domain([data[i].date, data[j].date]);
+		var t = svg.transition().duration(750);
+		t.select(".x.axis").call(xAxis);
+		t.select(".area").attr("d", area);
+		t.select(".line").attr("d", line);
+	}
+	
+	// Parse dates, returns minutes from seconds. Assume values are sorted by date.
+	function type(d) {
+		d.date = parse(d.date);
+		d.time = d.time / 60;
+		return d;
+	}	
 
 }
 
@@ -249,9 +249,9 @@ function processColors(color){
  * @param array
  * @return void
 */
-function createCharts(time){
-	
-	var data = time.map(function(obj){ 
+function createCharts(all_data){
+
+	var data = all_data.map(function(obj){ 
 		return obj.value.time 
 	});
 	var height = 500;
@@ -287,7 +287,7 @@ function createCharts(time){
 			return xScale.rangeBand()
 		})
 		.attr("fill", function (d, i) {
-			return getWebsiteColor(time[i].key)
+			return getWebsiteColor(all_data[i].key)
 		})
 		.attr("height", 0)
 		.on('mouseover', function(d,i){
@@ -296,15 +296,36 @@ function createCharts(time){
 	    	d3.select(".info p").remove()
 		    d3.select(".info")
 		    	.append("p")
-		    	.text(time[i].key)
+		    	.text(all_data[i].key)
 		    	.append("p")
-		    	.text(time[i].value.time)
+		    	.text("Today "+ +(all_data[i].value.time / 60).toFixed(1)+" minutes")
+		})
+		.on('click',function(d,i){
+	    	d3.select("#individual-website").remove()
+		    d3.select("body")
 		    	.append("div")
 		    	.attr("id","individual-website")
-		    	.call(getIndividualWebsiteGraph(time[i].key))
+		    	.append("p")
+		    	.text(all_data[i].key +" ("+ +(all_data[i].value.time / 60).toFixed(1)+" minutes today, you can click on this graph to zoom)")
+		    	.call(function(){
+			    	getIndividualWebsiteGraph(all_data[i].key)
+		    	})
+		    d3.select("#individual-website")
+		    	.append("button")
+		    	.classed("close",true)
+		    	.on('click',function(){
+    		    	d3.select("#individual-website").transition()
+	    		    	.duration(1500)
+				    	.style('opacity',0)
+				    	.remove()
+		    	})
+		    d3.select("#individual-website").transition()
+		    	.duration(1500)
+		    	.style('opacity',1)
 		})
 		.on('mouseout', function(d){
 		    d3.select(this).attr("class","normal")
+		    d3.select(".info p").text("Click on a column")
 		})
 		.transition()
 		.duration(200)
