@@ -276,10 +276,13 @@ function createCharts(all_data){
 			all_data.splice(key,1);
 		}
 	}
-
+	
+	//build an array with the time
 	var data = all_data.map(function(obj){ 
 		return obj.value.time 
 	});
+	
+	//create the chart
 	var height = 500;
 	var width = 800;
 	var today = getToday();
