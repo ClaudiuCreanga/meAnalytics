@@ -19,7 +19,7 @@ menu_container.addEventListener("click",function(e){
 
 //store the websites
 function storeData(){
-	chrome.storage.sync.set({'settings':settings}, function () {
+	chrome.storage.local.set({'settings':settings}, function () {
         console.log('Saved', settings);
     });
 }
@@ -90,7 +90,7 @@ function createElements(key,div_name,type,website_name){
 
 //get previously saved websites
 function getData(){
-	chrome.storage.sync.get('settings',function(object){
+	chrome.storage.local.get('settings',function(object){
 		if(chrome.runtime.lastError){
 			console.log("Runtime error.");
 		}
@@ -109,7 +109,7 @@ function getData(){
 }
 getData();
 
-//chrome.storage.sync.clear()
+//chrome.storage.local.clear()
 
 //listen to inputs and save the data
 var listenToNewWebsite = function(new_item,index){

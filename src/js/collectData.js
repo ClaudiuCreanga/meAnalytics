@@ -2,7 +2,7 @@
 
 //set up the globals
 var	activeUrl = "";
-	ignored_websites = new Array('newtab');
+	ignored_websites = ['newtab','extensions'];
 	isUserActive = true;
 	timeOnWebsite = 0;
 	today = "";
@@ -23,7 +23,7 @@ start();
 
 function getSavedData(){
 	
-	chrome.storage.sync.get('stored_history',function(object){
+	chrome.storage.local.get('stored_history',function(object){
 		if(chrome.runtime.lastError){
 			console.log("Runtime error.");
 		}
@@ -106,7 +106,7 @@ function getActiveTab(){
  * @return void 
 */
 function savestored_history(){
-	chrome.storage.sync.set({'stored_history':stored_history}, function () {
+	chrome.storage.local.set({'stored_history':stored_history}, function () {
         console.log('Saved', stored_history);
         timeOnWebsite = 0;
     });
@@ -185,7 +185,7 @@ function updateTime() {
  * @return void
 */
 function getIgnoredWebsites(){
-	chrome.storage.sync.get('settings',function(object){
+	chrome.storage.local.get('settings',function(object){
 		if(chrome.runtime.lastError){
 			console.log("Runtime error.");
 		}

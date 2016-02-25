@@ -3,6 +3,7 @@
 //set up the globals
 var settings = {}
 	stored_history = {}
+	ignored_websites = ['newtab','extensions']
 	
 /*
  * @desc boot up the whole thing
@@ -10,6 +11,7 @@ var settings = {}
 function start(){
 	getStoredHistory();
 	getUserSettings();
+	getIgnoredWebsites();
 }
 start();
 
@@ -20,7 +22,7 @@ start();
  * @return void
 */
 function getStoredHistory(){
-	chrome.storage.sync.get('stored_history',function(object){
+	chrome.storage.local.get('stored_history',function(object){
 		if(chrome.runtime.lastError){
 			console.log("Runtime error.");
 		}
@@ -45,8 +47,26 @@ function getStoredHistory(){
  * @requires object settings from main.js
  * @return void
 */
+function getIgnoredWebsites(){
+	chrome.storage.local.get('settings',function(object){
+		if(chrome.runtime.lastError){
+			console.log("Runtime error.");
+		}
+		var stored_settings = object;
+		if(stored_settings){
+			if(Object.keys(stored_settings).length){
+				for(var key in stored_settings){
+					if(stored_settings[key]['type'] == 'ignore'){
+						ignored_websites.push(stored_settings[key]["website"]);
+					}
+				}
+			}
+		}
+	})
+}
+
 function getUserSettings(){
-	chrome.storage.sync.get('settings',function(object){
+	chrome.storage.local.get('settings',function(object){
 		if(chrome.runtime.lastError){
 			console.log("Runtime error.");
 		}
@@ -89,7 +109,7 @@ function getTimeSpentOnWebsites(){
 	    time.push(val);
 	}
 */
-	
+	console.log(stored_history[today])
 	createCharts(d3.entries(stored_history[today]));
 	
 }
@@ -250,6 +270,13 @@ function processColors(color){
  * @return void
 */
 function createCharts(all_data){
+
+	//remove ignred websites
+	for(var key in all_data){
+		if(isInArray(all_data[key]['key'],ignored_websites)){
+			all_data.splice(key);
+		}
+	}
 
 	var data = all_data.map(function(obj){ 
 		return obj.value.time 
