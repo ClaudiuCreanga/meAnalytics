@@ -113,6 +113,124 @@ function getWebsiteColor(website){
 	return processColors(color);
 }
 
+
+function getSpecificWebsiteData(website){
+	
+	var data = [];
+	for(i in stored_history){
+		for(key of Object.keys(stored_history[i])){
+			if(stored_history[i][key]['url'] == website){
+				data.push({'date':i,'time':stored_history[i][key]['url']});
+			}
+		}
+	}
+	return data;
+	
+}
+
+function getIndividualWebsiteGraph(website){
+	
+	var data = getSpecificWebsiteData(website)
+		console.log(data);
+	
+	
+	var margin = {top: 40, right: 40, bottom: 40, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+	//var parse = d3.time.format("%b %Y").parse;
+	var parse = d3.time.format("%d/%m/%Y").parse;
+
+	
+	var x = d3.time.scale()
+	    .range([0, width]);
+	
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+	
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .tickSize(-height);
+	
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .ticks(4)
+	    .orient("right");
+	
+	data.forEach(type);
+	
+	var line = d3.svg.line()
+	    .interpolate("monotone")
+	    .x(function(d) { return x(d.date); })
+	    .y(function(d) { return y(d.time); });
+	
+	var svg = d3.select("#individual-website").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	svg.append("clipPath")
+	    .attr("id", "clip")
+	  .append("rect")
+	    .attr("width", width)
+	    .attr("height", height);
+
+
+  // Compute the minimum and maximum date, and the maximum time.
+  x.domain([data[0].date, data[data.length - 1].date]);
+  y.domain([0, d3.max(data, function(d) { return d.time; })]).nice();
+
+  svg
+      .datum(data)
+      .on("click", click);
+
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + width + ",0)")
+      .call(yAxis);
+
+  svg.append("path")
+      .attr("class", "line")
+      .attr("clip-path", "url(#clip)")
+      .attr("d", line);
+      
+
+  svg.append("text")
+      .attr("x", width - 6)
+      .attr("y", height - 6)
+      .style("text-anchor", "end")
+
+ // On click, update the x-axis.
+  function click() {
+    var n = data.length - 1,
+        i = Math.floor(Math.random() * n / 2),
+        j = i + Math.floor(Math.random() * n / 2) + 1;
+    x.domain([data[i].date, data[j].date]);
+    var t = svg.transition().duration(750);
+    t.select(".x.axis").call(xAxis);
+    t.select(".area").attr("d", area);
+    t.select(".line").attr("d", line);
+  }
+  
+  // Parse dates and numbers. We assume values are sorted by date.
+// Also filter to one symbol; the S&P 500.
+function type(d) {
+  d.date = parse(d.date);
+  d.time = +d.time;
+  return d;
+}	
+
+}
+
+ 		
+
 /*
  * @desc process the column colors.
  * @param string
@@ -181,6 +299,9 @@ function createCharts(time){
 		    	.text(time[i].key)
 		    	.append("p")
 		    	.text(time[i].value.time)
+		    	.append("div")
+		    	.attr("id","individual-website")
+		    	.call(getIndividualWebsiteGraph(time[i].key))
 		})
 		.on('mouseout', function(d){
 		    d3.select(this).attr("class","normal")
