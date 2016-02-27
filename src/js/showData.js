@@ -325,9 +325,7 @@ function createCharts(all_data){
 	    	d3.select(".info p").remove()
 		    d3.select(".info")
 		    	.append("p")
-		    	.text(all_data[i].key)
-		    	.append("p")
-		    	.text("Today "+ +(all_data[i].value.time / 60).toFixed(1)+" minutes")
+		    	.text(all_data[i].key + " (today "+ +(all_data[i].value.time / 60).toFixed(1)+" minutes)")
 		})
 		.on('click',function(d,i){
 	    	d3.select("#individual-website").remove()
@@ -367,6 +365,16 @@ function createCharts(all_data){
 		.attr("height", function (d, i) {
 			return yScale(d);
 		});
+	
+	svg.selectAll("text#chartarea")
+	.data(data)
+		.enter()
+		.append('text')
+		.attr('class', 'bar')
+		.attr("text-anchor", "middle")
+		.attr("x", function(d) { return xScale(d) + xScale.rangeBand()/2})
+		.attr("y", function(d) { return height - yScale(d) - 5; })
+		.text(function(d){ return +(d / 60).toFixed(1) })
 }
 
 /*

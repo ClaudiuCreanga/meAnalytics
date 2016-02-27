@@ -12,7 +12,6 @@ body,
 }
 body{
 	background: #E3DFD7;
-/* 	background: url(../images/background.png); */
 }
 .main-data{
 	width:100%;
@@ -20,7 +19,6 @@ body{
 	justify-content: center;
 	align-items: flex-end;
 	height:calc(100% - 100px);
-	position: relative;
 }
 svg{
 	cursor: pointer;

@@ -2,6 +2,7 @@
 	height: 500px;
 	width: 800px;
 	position:relative;
+	overflow: visible;
 }
 #individual-website{
 	opacity:0;
@@ -29,18 +30,19 @@
 }
 .info{
 	position:absolute;
-	top:0;
+	top:8px;
 	box-shadow: 0 1px 1px 0 #C7C7C7 inset;
 	background: none repeat scroll 0 0 #E9E9E9;
 	padding:10px;
 	text-align: center;
 	z-index:1;
-	width: 140px;
-	height: 92px;
+	min-width: 140px;
+	height: 38px;
 	display: flex;
     align-items: center;
     text-align: center;
     justify-content: center;
+    left:75px;
 }
 svg {
   font: 10px sans-serif;
