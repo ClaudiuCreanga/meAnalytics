@@ -5,10 +5,11 @@
 	display:none;
 	min-height: 400px;
 	overflow-y: scroll;
-	transform: translateX(-100%);
+	transform: translateX(-610px);
 	background: #EFEFEF;
 	padding: 20px;
 	z-index: 3;
+	border-radius: 0 10px 10px 0;
 }
 .websites.active{
 	display: block;
@@ -23,13 +24,13 @@
 }
     
 @keyframes slide-in {
-    0% { transform: translateX(-100%); }
+    0% { transform: translateX(-610px); }
     100% { transform: translateX(0%); }
 }
     
 @keyframes slide-out {
     0% { transform: translateX(0%); }
-    100% { transform: translateX(-100%); }
+    100% { transform: translateX(-630px); }
 }
 
 .website{
