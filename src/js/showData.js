@@ -366,8 +366,9 @@ function createCharts(all_data){
 			return yScale(d);
 		});
 	
+	//add numbers on columns
 	svg.selectAll("text#chartarea")
-	.data(data)
+		.data(data)
 		.enter()
 		.append('text')
 		.attr('class', 'bar')
@@ -375,6 +376,25 @@ function createCharts(all_data){
 		.attr("x", function(d) { return xScale(d) + xScale.rangeBand()/2})
 		.attr("y", function(d) { return height - yScale(d) - 5; })
 		.text(function(d){ return +(d / 60).toFixed(1) })
+		
+	//add text on columns
+	svg.selectAll("text#chartarea")
+		.data(data)
+		.enter()
+		.append('text')
+		.attr('class', 'website-name')
+		.attr("text-anchor", "middle")
+		.text(function(d,i){ return all_data[i].key })
+		.attr("x", function(d) { 
+			if(this.getBBox().width < yScale(d)){
+				return height - this.getBBox().width / 2 - 10 
+			}
+			else{
+				return -999999
+			}
+		})
+		.attr("y", function(d) { return -xScale(d) - xScale.rangeBand()/2 + 3; })
+		.attr("transform","rotate(90)")
 }
 
 /*
