@@ -386,7 +386,7 @@ function createCharts(all_data){
 		.attr("text-anchor", "middle")
 		.text(function(d,i){ return all_data[i].key })
 		.attr("x", function(d) { 
-			if(this.getBBox().width < yScale(d)){
+			if(this.getBBox().width < (yScale(d) - 8)){
 				return height - this.getBBox().width / 2 - 10 
 			}
 			else{
