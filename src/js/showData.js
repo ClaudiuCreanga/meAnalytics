@@ -92,6 +92,24 @@ function getToday(){
 	return today;
 }
 
+//attach click event on general graph
+var general_graphs = document.querySelector(".general-charts");
+general_graphs.addEventListener("click", function(e){
+	d3.select("#good-bad-chart").remove()
+	d3.select("body")
+		.append("div")
+		.attr("id","good-bad-chart")
+		.append("p")
+		.text("good vs bad websites")
+		.call(function(){
+	    	getGoodBadGraph()
+		})
+},false)
+
+//build the good bad graph
+function getGoodBadGraph(){
+	
+}
 /*
  * @desc process the user history and gets time spent on websites
  * @param stored_history
