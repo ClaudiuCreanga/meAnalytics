@@ -105,8 +105,42 @@ function getToday(){
 //attach click event on insights
 var insights = document.querySelector(".bubble-container");
 insights.addEventListener("click", function(e){
-	
+	d3.select("body")
+		.append("div")
+		.attr("id","insights")
+		.append("p")
+		.text("meAnalytics")
+		.call(function(){
+	    	buildInsights()
+		});
+    d3.select("#insights")
+	.append("button")
+	.classed("close",true)
+	.on('click',function(){
+    	d3.select("#insights").transition()
+	    	.duration(1500)
+	    	.style('opacity',0)
+	    	.remove()
+	});
+	d3.select("#insights").transition()
+		.duration(1500)
+		.style('opacity',1);
+		
 },false);
+
+//build insights meAnalytics
+function buildInsights(){
+	d3.select("#insights")
+		.append("p")
+		.text("this is interesting data")
+}
+
+//attach click on close
+var close_insights = document.querySelector(".bubble-container .close");
+close_insights.addEventListener("click", function(e){
+	insights.style.display = "none";
+},false)
+
 
 //attach click event on general graph
 var general_graphs = document.querySelector(".general-charts");

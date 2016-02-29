@@ -81,6 +81,7 @@ svg{
 	bottom:20px;
 	left:93px;
 	display:none;
+	cursor: pointer;
 }
 .bubble {
 	background: #fff;

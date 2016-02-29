@@ -5,7 +5,8 @@
 	overflow: visible;
 }
 #individual-website,
-#good-bad-chart{
+#good-bad-chart,
+#insights{
 	opacity:0;
 	position: absolute;
     top: 50%;
