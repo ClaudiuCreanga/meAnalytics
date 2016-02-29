@@ -4,6 +4,8 @@
 var settings = {}
 	stored_history = {}
 	ignored_websites = ['newtab','extensions']
+	good_websites = []
+	bad_websites = []
 	
 /*
  * @desc boot up the whole thing
@@ -55,9 +57,17 @@ function getIgnoredWebsites(){
 		var stored_settings = object;
 		if(stored_settings){
 			if(Object.keys(stored_settings).length){
-				for(var key in stored_settings){
-					if(stored_settings[key]['type'] == 'ignore'){
-						ignored_websites.push(stored_settings[key]["website"]);
+				for(i in stored_settings){
+					for(var key in stored_settings[i]){	
+						if(stored_settings[i][key]['type'] == 'ignore'){
+							ignored_websites.push(stored_settings[i][key]["website"]);
+						}
+						else if(stored_settings[i][key]['type'] == 'good'){
+							good_websites.push(stored_settings[i][key]["website"]);
+						}
+						else if(stored_settings[i][key]['type'] == 'bad'){
+							bad_websites.push(stored_settings[i][key]["website"]);
+						}
 					}
 				}
 			}
@@ -104,10 +114,135 @@ general_graphs.addEventListener("click", function(e){
 		.call(function(){
 	    	getGoodBadGraph()
 		})
+    d3.select("#good-bad-chart")
+	.append("button")
+	.classed("close",true)
+	.on('click',function(){
+    	d3.select("#good-bad-chart").transition()
+	    	.duration(1500)
+	    	.style('opacity',0)
+	    	.remove()
+	})
+	d3.select("#good-bad-chart").transition()
+		.duration(1500)
+		.style('opacity',1)
 },false)
+
+//process data for good vs bad websites
+function getGoodBadWebsitesData(){
+	var data = [];
+	for(i in stored_history){
+		time_spent_on_good_websites = 0;
+		time_spent_on_bad_websites = 0;
+		console.log(i)
+		for(key of Object.keys(stored_history[i])){			
+			if(isInArray(stored_history[i][key]['url'],good_websites)){
+				time_spent_on_good_websites += stored_history[i][key]['time']
+			}
+			else if(isInArray(stored_history[i][key]['url'],bad_websites)){
+				time_spent_on_bad_websites += stored_history[i][key]['time']
+			}
+		}
+		data.push({'date':i,'good_website':+(time_spent_on_good_websites / 3600).toFixed(1), 'bad_website':+(time_spent_on_bad_websites / 3600).toFixed(1)});
+	}
+	console.log(data)
+	return data;
+	
+}
 
 //build the good bad graph
 function getGoodBadGraph(){
+	
+	var	margin = {top: 20, right: 20, bottom: 20, left: 40},
+		width = 960 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
+		
+	var	data = getGoodBadWebsitesData(data);
+
+	var parseDate = d3.time.format("%d/%m/%Y").parse;
+	
+	var x = d3.time.scale()
+	    .range([0, width]);
+	
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+	
+	var color = d3.scale.category10();
+	
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+	
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
+	
+	var line = d3.svg.line()
+	    .interpolate("basis")
+	    .x(function(d) { return x(d.date); })
+	    .y(function(d) { return y(d.time); });
+	
+	var svg = d3.select("#good-bad-chart").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	
+	
+	  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
+	
+	  data.forEach(function(d) {
+	    d.date = parseDate(d.date);
+	  });
+	
+	  var cities = color.domain().map(function(name) {
+	    return {
+	      name: name,
+	      values: data.map(function(d) {
+	        return {date: d.date, time: +d[name]};
+	      })
+	    };
+	  });
+	
+	  x.domain(d3.extent(data, function(d) { return d.date; }));
+	
+	  y.domain([
+	    d3.min(cities, function(c) { return d3.min(c.values, function(v) { return v.time; }); }),
+	    d3.max(cities, function(c) { return d3.max(c.values, function(v) { return v.time; }); })
+	  ]);
+	
+	  svg.append("g")
+	      .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(xAxis);
+	
+	  svg.append("g")
+	      .attr("class", "y axis")
+	      .call(yAxis)
+	    .append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	      .text("Hours spent");
+	
+	  var city = svg.selectAll(".city")
+	      .data(cities)
+	    .enter().append("g")
+	      .attr("class", "city");
+	
+	  city.append("path")
+	      .attr("class", "line")
+	      .attr("d", function(d) { return line(d.values); })
+	      .style("stroke", function(d) { return color(d.name); });
+	
+	  city.append("text")
+	      .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+	      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.time) + ")"; })
+	      .attr("x", 3)
+	      .attr("dy", ".35em")
+	      .text(function(d) { return d.name; });
 	
 }
 /*
@@ -288,7 +423,7 @@ function processColors(color){
 */
 function createCharts(all_data){
 
-	//remove ignred websites
+	//remove ignored websites
 	for(var key in all_data){
 		if(isInArray(all_data[key]['key'],ignored_websites)){
 			all_data.splice(key,1);

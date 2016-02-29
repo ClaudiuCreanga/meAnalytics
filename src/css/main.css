@@ -74,4 +74,5 @@ svg{
     background: url(../images/graphs-light.svg) 10px 16px no-repeat #E9E9E9;
     background-size: 40px 23px;
 	box-shadow: 0 1px 1px 0 #C7C7C7 inset;
+	cursor: pointer;
 }
