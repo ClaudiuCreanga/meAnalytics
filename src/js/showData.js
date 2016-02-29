@@ -75,6 +75,7 @@ function getIgnoredWebsites(){
 	})
 }
 
+//get user settings
 function getUserSettings(){
 	chrome.storage.local.get('settings',function(object){
 		if(chrome.runtime.lastError){
