@@ -3,7 +3,7 @@
 //set up the globals
 var settings = {}
 	stored_history = {}
-	ignored_websites = ['newtab','extensions']
+	ignored_websites = ['newtab','extensions','history']
 	good_websites = []
 	bad_websites = []
 	
@@ -102,6 +102,12 @@ function getToday(){
 	return today;
 }
 
+//attach click event on insights
+var insights = document.querySelector(".bubble-container");
+insights.addEventListener("click", function(e){
+	
+},false);
+
 //attach click event on general graph
 var general_graphs = document.querySelector(".general-charts");
 general_graphs.addEventListener("click", function(e){
@@ -125,7 +131,14 @@ general_graphs.addEventListener("click", function(e){
 	})
 	d3.select("#good-bad-chart").transition()
 		.duration(1500)
-		.style('opacity',1)
+		.style('opacity',1);
+		
+	setTimeout(function(){
+		d3.select(".bubble-container").transition()
+			.duration(1000)
+			.style('display','block')
+	}, 2000);
+	
 },false)
 
 //process data for good vs bad websites
@@ -143,7 +156,7 @@ function getGoodBadWebsitesData(){
 				time_spent_on_bad_websites += stored_history[i][key]['time']
 			}
 		}
-		data.push({'date':i,'good_website':+(time_spent_on_good_websites / 3600).toFixed(1), 'bad_website':+(time_spent_on_bad_websites / 3600).toFixed(1)});
+		data.push({'date':i,'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});
 	}
 	console.log(data)
 	return data;
@@ -227,20 +240,20 @@ function getGoodBadGraph(){
 	      .style("text-anchor", "end")
 	      .text("Hours spent");
 	
-	  var city = svg.selectAll(".city")
+	  var website_type = svg.selectAll(".website_type")
 	      .data(cities)
 	    .enter().append("g")
-	      .attr("class", "city");
+	      .attr("class", "website_type");
 	
-	  city.append("path")
+	  website_type.append("path")
 	      .attr("class", "line")
 	      .attr("d", function(d) { return line(d.values); })
 	      .style("stroke", function(d) { return color(d.name); });
 	
-	  city.append("text")
+	  website_type.append("text")
 	      .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
 	      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.time) + ")"; })
-	      .attr("x", 3)
+	      .attr("x", -90)
 	      .attr("dy", ".35em")
 	      .text(function(d) { return d.name; });
 	

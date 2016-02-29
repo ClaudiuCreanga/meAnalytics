@@ -2,7 +2,7 @@
 
 //set up the globals
 var	activeUrl = "";
-	ignored_websites = ['newtab','extensions'];
+	ignored_websites = ['newtab','extensions','history'];
 	isUserActive = true;
 	timeOnWebsite = 0;
 	today = "";
