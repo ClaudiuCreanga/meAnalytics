@@ -48,7 +48,7 @@ function getToday(){
 	var day = currentDate.getDate();
 	var month = currentDate.getMonth() + 1;
 	var year = currentDate.getFullYear();
-	today = day+"/"+month+"/"+year;
+	today = year+"/"+month+"/"+day;
 }
 
 /*

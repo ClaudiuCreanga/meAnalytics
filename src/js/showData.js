@@ -178,6 +178,7 @@ general_graphs.addEventListener("click", function(e){
 
 //process data for good vs bad websites
 function getGoodBadWebsitesData(){
+	
 	var data = [];
 	for(i in stored_history){
 		time_spent_on_good_websites = 0;
@@ -191,46 +192,15 @@ function getGoodBadWebsitesData(){
 				time_spent_on_bad_websites += stored_history[i][key]['time']
 			}
 		}
-		data.push({'date':i,'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});
+		my_date = i.split("/")
+		data.push({'date':new Date(my_date[2]+"-"+my_date[1]+"-"+my_date[0]),'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});
 	}
-	console.log(data)
-	data = sortBy(data, { prop: "date" });
-	return data;
+	return data.sort(sortByDateAscending);
 	
 }
-
-var sortBy = (function () {
-  //cached privated objects
-  var _toString = Object.prototype.toString,
-      //the default parser function
-      _parser = function (x) { return x; },
-      //gets the item to be sorted
-      _getItem = function (x) {
-        return this.parser((_toString.call(x) === "[object Object]" && x[this.prop]) || x);
-      };
-
-  // Creates a method for sorting the Array
-  // @array: the Array of elements
-  // @o.prop: property name (if it is an Array of objects)
-  // @o.desc: determines whether the sort is descending
-  // @o.parser: function to parse the items to expected type
-  return function (array, o) {
-    if (!(array instanceof Array) || !array.length)
-      return [];
-    if (_toString.call(o) !== "[object Object]")
-      o = {};
-    if (typeof o.parser !== "function")
-      o.parser = _parser;
-    //if @o.desc is false: set 1, else -1
-    o.desc = [1, -1][+!!o.desc];
-    return array.sort(function (a, b) {
-      a = _getItem.call(o, a);
-      b = _getItem.call(o, b);
-      return ((a > b) - (b > a)) * o.desc;
-    });
-  };
-
-}());	
+function sortByDateAscending(a, b) {
+    return a.date - b.date;
+}
 
 //build the good bad graph
 function getGoodBadGraph(){
@@ -239,9 +209,7 @@ function getGoodBadGraph(){
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
 		
-	var	data = getGoodBadWebsitesData(data);
-
-	var parseDate = d3.time.format("%d/%m/%Y").parse;
+	var	data = getGoodBadWebsitesData();
 	
 	var x = d3.time.scale()
 	    .range([0, width]);
@@ -273,10 +241,6 @@ function getGoodBadGraph(){
 	
 	
 	  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
-	
-	  data.forEach(function(d) {
-	    d.date = parseDate(d.date);
-	  });
 	
 	  var cities = color.domain().map(function(name) {
 	    return {
