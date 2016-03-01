@@ -8,6 +8,7 @@ var	activeUrl = "";
 	today = "";
 	previous_tab = "";
 	stored_history = {};
+	timeframe_start = "";
 	
 /*
  * @desc boot up the whole thing
@@ -36,7 +37,14 @@ function getSavedData(){
 
 function getPreviousTab(){
 	chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {	
-		previous_tab = arrayOfTabs[0].url;
+		if(arrayOfTabs[0]){
+			previous_tab = arrayOfTabs[0].url;
+		}
+		else{
+			previous_tab = "";
+			console.log("inspect next element")
+			console.log(arrayOfTabs)
+		}
 	});
 }
 /*
@@ -62,24 +70,29 @@ function checkDate(activeTab){
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
+				stored_history[today][base_url]['timeframe'] = [stored_history[today][base_url]['timeframe'] +"-"+ (+new Date / 1000)];
 			}
 			else{
 				stored_history[today][base_url] = {};
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = timeOnWebsite;
+				stored_history[today][base_url]['timeframe'] = [timeframe_start+"-"+ (+new Date / 1000)];
 			}
 		}else{
 			stored_history[today] = {};
 			stored_history[today][base_url] = {};
 			stored_history[today][base_url]['url'] = base_url;
 			stored_history[today][base_url]['time'] = timeOnWebsite;
+			stored_history[today][base_url]['timeframe'] = [timeframe_start+"-"+ (+new Date / 1000)];
 		}
 		if(!isInArray(base_url,ignored_websites)){
 			savestored_history();
 		}
+		console.log(stored_history[today])
 		previous_tab = activeTab.url;
 	}
 }
+console.log(+new Date)
 
 /*
  * @desc main function called by the events on user action. 
@@ -109,6 +122,7 @@ function savestored_history(){
 	chrome.storage.local.set({'stored_history':stored_history}, function () {
         console.log('Saved', stored_history);
         timeOnWebsite = 0;
+        timeframe_start = +new Date;
     });
 }
 
