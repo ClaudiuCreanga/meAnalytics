@@ -327,15 +327,14 @@ function getWebsiteColor(website){
 	return processColors(color);
 }
 
-
 function getSpecificWebsiteData(website){
 	
 	var data = [];
 	for(i in stored_history){
 		for(key of Object.keys(stored_history[i])){
 			if(stored_history[i][key]['url'] == website){
-				var time_periods = stored_history[i][key]['timeframe'];
-				if(time_periods){
+				if(stored_history[i][key]['timeframe']){
+					var time_periods = stored_history[i][key]['timeframe'];
 					for(var a = 0; a < time_periods.length; a++){
 						var time_period = time_periods[a].toString().split("-");
 						if(time_period.length > 1){
