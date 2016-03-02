@@ -99,7 +99,7 @@ function getToday(){
 	var day = currentDate.getDate();
 	var month = currentDate.getMonth() + 1;
 	var year = currentDate.getFullYear();
-	var today = day+"/"+month+"/"+year;
+	var today = year+"/"+month+"/"+day;
 	return today;
 }
 
@@ -192,8 +192,7 @@ function getGoodBadWebsitesData(){
 				time_spent_on_bad_websites += stored_history[i][key]['time']
 			}
 		}
-		my_date = i.split("/")
-		data.push({'date':new Date(my_date[2]+"-"+my_date[1]+"-"+my_date[0]),'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});
+		data.push({'date':new Date(i),'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});
 	}
 	return data.sort(sortByDateAscending);
 	
@@ -237,8 +236,6 @@ function getGoodBadGraph(){
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	
-	
 	
 	  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 	
@@ -351,7 +348,7 @@ function getIndividualWebsiteGraph(website){
 		margin = {top: 20, right: 40, bottom: 20, left: 20},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-		parse = d3.time.format("%d/%m/%Y").parse;
+		parse = d3.time.format("%Y/%m/%d").parse;
 		
 	data.forEach(type);
 
@@ -468,7 +465,7 @@ function processColors(color){
  * @return void
 */
 function createCharts(all_data){
-
+console.log(all_data)
 	//remove ignored websites
 	for(var key in all_data){
 		if(isInArray(all_data[key]['key'],ignored_websites)){
