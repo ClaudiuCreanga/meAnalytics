@@ -3,7 +3,7 @@
 //set up the globals
 var settings = {}
 	stored_history = {}
-	ignored_websites = ['newtab','extensions','history']
+	ignored_websites = ['newtab','extensions','history','settings','']
 	good_websites = []
 	bad_websites = []
 	
@@ -334,10 +334,24 @@ function getSpecificWebsiteData(website){
 	for(i in stored_history){
 		for(key of Object.keys(stored_history[i])){
 			if(stored_history[i][key]['url'] == website){
-				data.push({'date':i,'time':stored_history[i][key]['time']});
+				var time_periods = stored_history[i][key]['timeframe'];
+				if(time_periods){
+					for(var a = 0; a < time_periods.length; a++){
+						var time_period = time_periods[a].toString().split("-");
+						if(time_period.length > 1){
+							var time_spent = +time_period[1] - +time_period[0];
+							console.log(time_spent)
+							var specific_date = +time_period[0] + +time_spent / 2;
+							data.push({'date':new Date(specific_date),'time':time_spent / 1000});
+						}					
+					}
+				}
+
+				//console.log(i+" "+stored_history[i][key]['timeframe'])
 			}
 		}
 	}
+	console.log(data)
 	return data;
 	
 }
@@ -348,7 +362,9 @@ function getIndividualWebsiteGraph(website){
 		margin = {top: 20, right: 40, bottom: 20, left: 20},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-		parse = d3.time.format("%Y/%m/%d").parse;
+		//parse = d3.time.format("%Y/%m/%d").parse;
+		
+		//console.log(data.)
 		
 	data.forEach(type);
 
@@ -437,7 +453,6 @@ function getIndividualWebsiteGraph(website){
 	
 	// Parse dates, returns minutes from seconds. Assume values are sorted by date.
 	function type(d) {
-		d.date = parse(d.date);
 		d.time = d.time / 60;
 		return d;
 	}	

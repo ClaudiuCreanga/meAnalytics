@@ -2,7 +2,7 @@
 
 //set up the globals
 var	activeUrl = "";
-	ignored_websites = ['newtab','extensions','history'];
+	ignored_websites = ['newtab','extensions','history','settings',''];
 	isUserActive = true;
 	timeOnWebsite = 0;
 	today = "";
@@ -42,8 +42,6 @@ function getPreviousTab(){
 		}
 		else{
 			previous_tab = "";
-			console.log("inspect next element")
-			console.log(arrayOfTabs)
 		}
 	});
 }
