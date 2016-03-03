@@ -70,20 +70,20 @@ function checkDate(activeTab){
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
-				stored_history[today][base_url]['timeframe'].push([timeframe_start +"-"+ timeframe_stop]);
+				stored_history[today][base_url]['timeframe'].push([timeframe_start.concat("-",timeframe_stop)]);
 			}
 			else{
 				stored_history[today][base_url] = {};
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = timeOnWebsite;
-				stored_history[today][base_url]['timeframe'] = [timeframe_start +"-"+ timeframe_stop];
+				stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeframe_stop)];
 			}
 		}else{
 			stored_history[today] = {};
 			stored_history[today][base_url] = {};
 			stored_history[today][base_url]['url'] = base_url;
 			stored_history[today][base_url]['time'] = timeOnWebsite;
-			stored_history[today][base_url]['timeframe'] = [timeframe_start +"-"+ timeframe_stop];
+			stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeframe_stop)];
 		}
 		if(!isInArray(base_url,ignored_websites)){
 			savestored_history();

@@ -338,17 +338,23 @@ function getSpecificWebsiteData(website){
 					var time_periods = stored_history[i][key]['timeframe'];
 					for(var a = 0; a < time_periods.length; a++){
 						var time_period = time_periods[a].toString().split("-");
-						if(time_period.length > 1){
-							var time_spent = +time_period[1] - +time_period[0];
-							console.log(time_period[1]+" "+time_period[0])
-							console.log(time_spent)
+						if(time_period.length > 1 && time_period[0] > 1448842497000){ //bigger than 2016
+							var time_spent = time_period[1] - time_period[0];
 							var specific_date = +time_period[0] + +time_spent / 2;
-							data.push({'date':new Date(specific_date),'time':time_spent / 1000});
+							var date_format = new Date(specific_date);
+							if(a > 0){
+								console.log(data[a-1].date+" "+new Date(specific_date))
+								if(data[a-1].date == date_format){
+									//data[a-1].time = data[a-1].time + time_spent / 1000;
+									alert()
+									//continue
+								}
+							}
+							//console.log(data.date+ " "+data.time)
+							data.push({'date':date_format,'time':time_spent / 1000});
 						}					
 					}
 				}
-
-				//console.log(i+" "+stored_history[i][key]['timeframe'])
 			}
 		}
 	}
@@ -365,7 +371,6 @@ function getIndividualWebsiteGraph(website){
 		height = 500 - margin.top - margin.bottom;
 		//parse = d3.time.format("%Y/%m/%d").parse;
 		
-		//console.log(data.)
 		
 	data.forEach(type);
 
