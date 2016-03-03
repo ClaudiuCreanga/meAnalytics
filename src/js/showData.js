@@ -3,7 +3,7 @@
 //set up the globals
 var settings = {}
 	stored_history = {}
-	ignored_websites = ['newtab','extensions','history','settings','']
+	ignored_websites = ['newtab','extensions','history','settings']
 	good_websites = []
 	bad_websites = []
 	
@@ -327,6 +327,7 @@ function getWebsiteColor(website){
 	return processColors(color);
 }
 
+
 function getSpecificWebsiteData(website){
 	
 	var data = [];
@@ -339,6 +340,7 @@ function getSpecificWebsiteData(website){
 						var time_period = time_periods[a].toString().split("-");
 						if(time_period.length > 1){
 							var time_spent = +time_period[1] - +time_period[0];
+							console.log(time_period[1]+" "+time_period[0])
 							console.log(time_spent)
 							var specific_date = +time_period[0] + +time_spent / 2;
 							data.push({'date':new Date(specific_date),'time':time_spent / 1000});

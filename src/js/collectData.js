@@ -2,7 +2,7 @@
 
 //set up the globals
 var	activeUrl = "";
-	ignored_websites = ['newtab','extensions','history','settings',''];
+	ignored_websites = ['newtab','extensions','history','settings'];
 	isUserActive = true;
 	timeOnWebsite = 0;
 	today = "";
@@ -65,6 +65,7 @@ function checkDate(activeTab){
 	if(activeTab){
 		var base_url = getBaseDomain(previous_tab);
 		var timeframe_stop = +timeframe_start+(timeOnWebsite * 1000)
+		console.log(timeframe_start.concat("-",timeframe_stop))
 		if(stored_history[today]){
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
@@ -185,6 +186,7 @@ function updateTime() {
     var current_website = getActiveWebsite();  
     if(isUserActive && !isInArray(current_website,ignored_websites)){
         timeOnWebsite += 1; 
+        console.log(timeOnWebsite)
     }
 }
 

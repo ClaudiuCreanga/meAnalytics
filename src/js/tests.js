@@ -1,4 +1,5 @@
 //removing a property from stored_history
+stored_history = {}
 function getStoredHistory(){
 	chrome.storage.local.get('stored_history',function(object){
 		if(chrome.runtime.lastError){
