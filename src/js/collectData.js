@@ -57,33 +57,46 @@ function getToday(){
 	today = year+"/"+month+"/"+day;
 }
 
+
+function createHoursObject(){
+	var hours = {}
+	for(var i = 0; i < 24; i++){
+		hours[i] = 0;
+	}
+	return hours;	
+}
+
 /*
  * @desc checks the date and processes the data, url and time, calls savestored_history()
  * @param object activeTab - the currently actived tab
 */
 function checkDate(activeTab){
+
 	if(activeTab){
 		var base_url = getBaseDomain(previous_tab);
-		var timeframe_stop = +timeframe_start+(timeOnWebsite * 1000)
+		//var timeframe_stop = +timeframe_start+(timeOnWebsite * 1000)
 		console.log(timeframe_start.concat("-",timeframe_stop))
 		if(stored_history[today]){
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
-				stored_history[today][base_url]['timeframe'].push([timeframe_start.concat("-",timeframe_stop)]);
+				stored_history[today][base_url]['timeframe'].push([timeframe_start.concat("-",timeOnWebsite)]);
 			}
 			else{
 				stored_history[today][base_url] = {};
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = timeOnWebsite;
-				stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeframe_stop)];
+				stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeOnWebsite)];
+				
 			}
 		}else{
 			stored_history[today] = {};
 			stored_history[today][base_url] = {};
 			stored_history[today][base_url]['url'] = base_url;
 			stored_history[today][base_url]['time'] = timeOnWebsite;
-			stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeframe_stop)];
+			//stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeOnWebsite)];
+			stored_history[today][base_url]['timeframe'] = createHoursObject();
+			
 		}
 		if(!isInArray(base_url,ignored_websites)){
 			savestored_history();
