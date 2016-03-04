@@ -1,13 +1,14 @@
-meAnalytics
+# meAnalytics
 ___
 
-# Usage
+## Usage
 ```
 npm install
 grunt
+grunt watch
 ```
 
-# License
+## License
 
 The MIT License (MIT)
 
