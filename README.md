@@ -1,6 +1,10 @@
 # meAnalytics
 ___
 
+## Description
+
+This chrome extension will gather data about your browsing activity and will generate useful reports. It tracks the websites your active on and lets you determine which are good or bad for your productivity. For example, as a programmer, potentially bad websites are email, ticketing systems etc. and good websites are stackoverflow and any websites you are currently working on.
+
 ## Usage
 ```
 npm install
@@ -31,5 +35,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-This chrome extension will help you improve your productivity. It tracks the websites your active on and lets you determine which are good or bad for your productivity. For example, as a programmer, potentially bad websites are email, ticketing systems etc. and good websites are stackoverflow and any websites you are currently working on.
