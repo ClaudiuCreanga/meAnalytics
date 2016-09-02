@@ -23,7 +23,6 @@ function start(){
 start();
 
 function getSavedData(){
-	
 	chrome.storage.local.get('stored_history',function(object){
 		if(chrome.runtime.lastError){
 			console.log("Runtime error.");

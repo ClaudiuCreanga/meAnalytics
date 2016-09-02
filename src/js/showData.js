@@ -30,7 +30,6 @@ function getStoredHistory(){
 		}
 		var stored_data = object;
 		if(stored_data){
-			console.log(stored_data)
 			if(Object.keys(stored_data).length){
 				stored_history = stored_data['stored_history'];
 				getTimeSpentOnWebsites();
@@ -338,6 +337,7 @@ function getSpecificWebsiteData(website){
 			if(stored_history[i][key]['url'] == website){
 				if(stored_history[i][key]['timeframe']){
 					var time_periods = stored_history[i][key]['timeframe'];
+					console.log(time_periods)
 					for(var a = 0; a < time_periods.length; a++){
 						var time_period = time_periods[a].toString().split("-");
 						if(time_period.length > 1 && time_period[0] > 1448842497000){ //bigger than 2016
@@ -345,7 +345,7 @@ function getSpecificWebsiteData(website){
 							if(time_spent < 1){
 								continue;
 							}
-							console.log(new Date(+time_period[0])+" "+time_spent)
+							//console.log(new Date(+time_period[0])+" "+time_spent)
 							//var date_format = new Date(specific_date);
 							//console.log(data.date+ " "+data.time)
 							data.push({'date':new Date(+time_period[0]),'time':time_spent / 1000});
@@ -356,11 +356,8 @@ function getSpecificWebsiteData(website){
 		}
 	}
 	console.log(data)
-	data = [
-{'date':'Wed Mar 02 2016 23:57:44 GMT+0000 (GMT)','time':"32"}
-	]
-	return data;
-	
+
+	return data;	
 }
 
 function getIndividualWebsiteGraph(website){
@@ -372,7 +369,7 @@ function getIndividualWebsiteGraph(website){
 		//parse = d3.time.format("%Y/%m/%d").parse;
 		
 	data.forEach(type);
-			console.log(data)
+			//console.log(data)
 
 
 	var x = d3.time.scale()
@@ -487,7 +484,6 @@ function processColors(color){
  * @return void
 */
 function createCharts(all_data){
-console.log(all_data)
 
 	//remove ignored websites
 	for(var key in all_data){
