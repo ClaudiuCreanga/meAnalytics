@@ -30,6 +30,7 @@ function getStoredHistory(){
 		}
 		var stored_data = object;
 		if(stored_data){
+			console.log(stored_data)
 			if(Object.keys(stored_data).length){
 				stored_history = stored_data['stored_history'];
 				getTimeSpentOnWebsites();
