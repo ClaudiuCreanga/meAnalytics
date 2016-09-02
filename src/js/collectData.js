@@ -57,13 +57,26 @@ function getToday(){
 	today = year+"/"+month+"/"+day;
 }
 
-
+/*
+ * @desc creates an object of hours from 0 to 23
+ * @return object
+*/
 function createHoursObject(){
 	var hours = {}
 	for(var i = 0; i < 24; i++){
-		hours[i] = 0;
+		hours[i] = [];
 	}
 	return hours;	
+}
+
+/*
+ * @desc gets the current hour from date
+ * @return int
+*/
+function getCurrentHour(){
+	var currentDate = new Date();
+	var hour = currentDate.getHours();
+	return hour;
 }
 
 /*
@@ -75,18 +88,20 @@ function checkDate(activeTab){
 	if(activeTab){
 		var base_url = getBaseDomain(previous_tab);
 		//var timeframe_stop = +timeframe_start+(timeOnWebsite * 1000)
-		console.log(timeframe_start.concat("-",timeframe_stop))
+		//console.log(timeframe_start.concat("-",timeframe_stop))
 		if(stored_history[today]){
+			console.log(stored_history[today])
+			//console.log(stored_history[today][base_url]['timeframe'][getCurrentHour()])
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
-				stored_history[today][base_url]['timeframe'].push([timeframe_start.concat("-",timeOnWebsite)]);
+				stored_history[today][base_url]['timeframe'][getCurrentHour()].push([timeframe_start.concat("-",timeOnWebsite)]);
 			}
 			else{
 				stored_history[today][base_url] = {};
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = timeOnWebsite;
-				stored_history[today][base_url]['timeframe'] = [timeframe_start.concat("-",timeOnWebsite)];
+				stored_history[today][base_url]['timeframe'][getCurrentHour()].push([timeframe_start.concat("-",timeOnWebsite)]);
 				
 			}
 		}else{

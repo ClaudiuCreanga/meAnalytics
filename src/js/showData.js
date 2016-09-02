@@ -305,6 +305,7 @@ function getTimeSpentOnWebsites(){
 	    time.push(val);
 	}
 */
+console.log(stored_history)
 	createCharts(d3.entries(stored_history[today]));
 	
 }
@@ -486,6 +487,7 @@ function processColors(color){
 */
 function createCharts(all_data){
 console.log(all_data)
+
 	//remove ignored websites
 	for(var key in all_data){
 		if(isInArray(all_data[key]['key'],ignored_websites)){

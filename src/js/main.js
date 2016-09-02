@@ -109,7 +109,7 @@ function getData(){
 }
 getData();
 
-//chrome.storage.sync.clear()
+chrome.storage.local.clear()
 
 //listen to inputs and save the data
 var listenToNewWebsite = function(new_item,index){
