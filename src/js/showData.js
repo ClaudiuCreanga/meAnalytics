@@ -305,7 +305,6 @@ function getTimeSpentOnWebsites(){
 	    time.push(val);
 	}
 */
-console.log(stored_history)
 	createCharts(d3.entries(stored_history[today]));
 	
 }
@@ -333,23 +332,25 @@ function getSpecificWebsiteData(website){
 	
 	var data = [];
 	for(i in stored_history){
+		var newDateFormat = i.split("/");
 		for(key of Object.keys(stored_history[i])){
 			if(stored_history[i][key]['url'] == website){
 				if(stored_history[i][key]['timeframe']){
 					var time_periods = stored_history[i][key]['timeframe'];
-					console.log(time_periods)
-					for(var a = 0; a < time_periods.length; a++){
+					for(var a = 0; a < Object.keys(time_periods).length; a++){
 						var time_period = time_periods[a].toString().split("-");
 						if(time_period.length > 1 && time_period[0] > 1448842497000){ //bigger than 2016
 							var time_spent = time_period[1] - time_period[0];
 							if(time_spent < 1){
 								continue;
 							}
+							//console.log(new Date(+time_period[0]))
 							//console.log(new Date(+time_period[0])+" "+time_spent)
 							//var date_format = new Date(specific_date);
 							//console.log(data.date+ " "+data.time)
-							data.push({'date':new Date(+time_period[0]),'time':time_spent / 1000});
-						}					
+							//console.log(new Date(+time_period[0]))
+						}
+						data.push({'date':new Date(newDateFormat+", "+a+":0:0"),'time':time_spent / 1000});					
 					}
 				}
 			}
@@ -357,16 +358,17 @@ function getSpecificWebsiteData(website){
 	}
 	console.log(data)
 
+
 	return data;	
 }
 
 function getIndividualWebsiteGraph(website){
 	
-	var data = getSpecificWebsiteData(website);		
+	var data = getSpecificWebsiteData(website)
 		margin = {top: 20, right: 40, bottom: 20, left: 20},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-		//parse = d3.time.format("%Y/%m/%d").parse;
+		//var parse = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
 		
 	data.forEach(type);
 			//console.log(data)
@@ -458,6 +460,7 @@ function getIndividualWebsiteGraph(website){
 	// Parse dates, returns minutes from seconds. Assume values are sorted by date.
 	function type(d) {
 		d.time = d.time / 60;
+		d.date = new Date(d.date);
 		return d;
 	}	
 
