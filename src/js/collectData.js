@@ -88,17 +88,19 @@ function checkDate(activeTab){
 		var base_url = getBaseDomain(previous_tab);
 		if(stored_history[today]){
 			console.log(stored_history[today])
+			var formatedTimeframeStart = timeframe_start / 1000;
+			var formatedTimeframeStop = formatedTimeframeStart + timeOnWebsite;
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
-				stored_history[today][base_url]['timeframe'][getCurrentHour()].push(timeframe_start+"-"+timeOnWebsite);
+				stored_history[today][base_url]['timeframe'][getCurrentHour()].push(formatedTimeframeStart+"-"+formatedTimeframeStop);
 			}
 			else{
 				stored_history[today][base_url] = {};
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = timeOnWebsite;
 				stored_history[today][base_url]['timeframe'] = createHoursObject()
-				stored_history[today][base_url]['timeframe'][getCurrentHour()].push(timeframe_start+"-"+timeOnWebsite);
+				stored_history[today][base_url]['timeframe'][getCurrentHour()].push(formatedTimeframeStart+"-"+formatedTimeframeStop);
 			}
 		}else{
 			stored_history[today] = {};

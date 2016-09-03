@@ -126,6 +126,10 @@ insights.addEventListener("click", function(e){
 	d3.select("#insights").transition()
 		.duration(1500)
 		.style('opacity',1);
+	d3.select("#good-bad-chart").transition()
+    	.duration(1500)
+    	.style('opacity',0)
+    	.remove()
 		
 },false);
 
@@ -183,7 +187,6 @@ function getGoodBadWebsitesData(){
 	for(i in stored_history){
 		time_spent_on_good_websites = 0;
 		time_spent_on_bad_websites = 0;
-		console.log(i)
 		for(key of Object.keys(stored_history[i])){			
 			if(isInArray(stored_history[i][key]['url'],good_websites)){
 				time_spent_on_good_websites += stored_history[i][key]['time']
@@ -209,6 +212,11 @@ function getGoodBadGraph(){
 		height = 500 - margin.top - margin.bottom;
 		
 	var	data = getGoodBadWebsitesData();
+	if(data.length < 2){
+		d3.select("#good-bad-chart")
+			.append("h1")
+			.text("Not enough data. Did you insert the websites in the menu? This graph needs at least 2 days of data.")
+	}
 	
 	var x = d3.time.scale()
 	    .range([0, width]);
@@ -338,25 +346,26 @@ function getSpecificWebsiteData(website){
 				if(stored_history[i][key]['timeframe']){
 					var time_periods = stored_history[i][key]['timeframe'];
 					for(var a = 0; a < Object.keys(time_periods).length; a++){
-						var time_period = time_periods[a].toString().split("-");
-						if(time_period.length > 1 && time_period[0] > 1448842497000){ //bigger than 2016
-							var time_spent = time_period[1] - time_period[0];
-							if(time_spent < 1){
-								continue;
+						var time_spent = 0;
+						for(var j = 0; j < time_periods[a].length; j++){
+							var time_period = time_periods[a][j].toString().split("-");
+							if(time_period.length > 1 && time_period[0] > 1448842497){ //bigger than 2016
+								time_spent += +time_period[1] - +time_period[0];
+								
 							}
+
 							//console.log(new Date(+time_period[0]))
 							//console.log(new Date(+time_period[0])+" "+time_spent)
 							//var date_format = new Date(specific_date);
 							//console.log(data.date+ " "+data.time)
-							//console.log(new Date(+time_period[0]))
 						}
-						data.push({'date':new Date(newDateFormat+", "+a+":0:0"),'time':time_spent / 1000});					
+						data.push({'date':new Date(newDateFormat+", "+a+":0:0"),'time':time_spent});					
 					}
 				}
 			}
 		}
 	}
-	console.log(data)
+	///console.log(data)
 
 	return data;	
 }
