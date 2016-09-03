@@ -358,7 +358,6 @@ function getSpecificWebsiteData(website){
 	}
 	console.log(data)
 
-
 	return data;	
 }
 
