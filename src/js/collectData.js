@@ -291,7 +291,7 @@ function isInArray(value, array) {
 /*
  * @desc set the options for the notification
 */
-var options = {
+var optionsExercise = {
   type: "basic",
   title: "Exercise!",
   message: "Exercise! Time to get up and move a bit.",
@@ -309,31 +309,62 @@ var options = {
 }
 
 /*
- * @desc creates and schedules 2 simple notification, 1 at lunch, 1 in the afternoon, that will remind me to exercise more at a particular time of the day
+ * @desc set the options for the notification
+*/
+var optionsSleep = {
+  type: "basic",
+  title: "Go to bed!",
+  message: "Time to prepare for bed. Close your things now!!!",
+  iconUrl: "../../images/icon128.PNG",
+  buttons: [
+	  {
+		  title : "Will do. I want to stay healthy.",
+		  iconUrl: "../../images/yes.png"
+	  },
+	  {
+		  title : "No! I don't care about my head.",
+		  iconUrl: "../../images/no.png"
+	  }
+  ]
+}
+
+/*
+ * @desc creates and schedules 2 exercise notifications, 1 at lunch, 1 in the afternoon, and one sleep notification that will remind me to exercise more at a particular time of the day and to got to sleep.
 */
 function scheduleNotifications(){
 	var now = new Date();
 	var millisTill1030 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 30, 0, 0) - now;
 	var millisTill1515 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 15, 0, 0) - now;
+	var millisTill2340 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 40, 0, 0) - now;
 	if (millisTill1030 < 0) {
 	     millisTill1030 += 86400000; // it's after 10:30am, try 10:30am tomorrow.
 	}
 	if (millisTill1515 < 0) {
 	     millisTill1515 += 86400000; // it's after 15:15am, try 15:15am tomorrow.
 	}
+	if (millisTill2340 < 0) {
+	     millisTill2340 += 86400000; // it's after 15:15am, try 15:15am tomorrow.
+	}
 	setTimeout(
 		function(){
 			// @params string,object,function
-			chrome.notifications.create('lunch', options, notificationCallback)
+			chrome.notifications.create('lunch', optionsExercise, notificationCallback)
 		}, 
 		millisTill1030
 	);
 	setTimeout(
 		function(){
 			// @params string,object,function
-			chrome.notifications.create('afternoon', options, notificationCallback)
+			chrome.notifications.create('afternoon', optionsExercise, notificationCallback)
 		}, 
 		millisTill1515
+	);
+	setTimeout(
+		function(){
+			// @params string,object,function
+			chrome.notifications.create('sleep', optionsSleep, notificationCallback)
+		}, 
+		millisTill2340
 	);
 }
 scheduleNotifications()
@@ -353,14 +384,12 @@ chrome.notifications.onButtonClicked.addListener(replyBtnClick);
  * @param string,int
 */
 function replyBtnClick(notificationId, btnIdx){
-    if (notificationId === 'lunch' || notificationId === 'afternoon') {
-		if(btnIdx == 0){
-			manageNotificationPersistence(notificationId,1)			
-		} else {
-			manageNotificationPersistence(notificationId,0)			
-		}
-		clearNotification(notificationId)
+	if(btnIdx == 0){
+		manageNotificationPersistence(notificationId,1)			
+	} else {
+		manageNotificationPersistence(notificationId,0)			
 	}
+	clearNotification(notificationId)
 }
 
 /*
