@@ -11,6 +11,7 @@ var	activeUrl = "";
 	previous_tab = "";
 	stored_history = {};
 	timeframe_start = "";
+	notification_info = {};
 	
 /*
  * @desc boot up the whole thing
@@ -285,10 +286,112 @@ function isInArray(value, array) {
   return array.indexOf(value) > -1;
 }
 
-chrome.notifications.create('exercise',options,callback)
+/********** NOTIFICATIONS *************/
+
+/*
+ * @desc set the options for the notification
+*/
 var options = {
   type: "basic",
   title: "Exercise!",
   message: "Exercise! Time to get up and move a bit.",
-  iconUrl: "../../images/icon48.PNG"
+  iconUrl: "../../images/icon128.PNG",
+  buttons: [
+	  {
+		  title : "Will do. I want to stay healthy.",
+		  iconUrl: "../../images/yes.png"
+	  },
+	  {
+		  title : "No! I don't care about my back.",
+		  iconUrl: "../../images/no.png"
+	  }
+  ]
+}
+
+/*
+ * @desc creates and schedules 2 simple notification, 1 at lunch, 1 in the afternoon, that will remind me to exercise more at a particular time of the day
+*/
+function scheduleNotifications(){
+	var now = new Date();
+	var millisTill1030 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 30, 0, 0) - now;
+	var millisTill1515 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 15, 0, 0) - now;
+	if (millisTill1030 < 0) {
+	     millisTill1030 += 86400000; // it's after 10:30am, try 10:30am tomorrow.
+	}
+	if (millisTill1515 < 0) {
+	     millisTill1515 += 86400000; // it's after 15:15am, try 15:15am tomorrow.
+	}
+	setTimeout(
+		function(){
+			// @params string,object,function
+			chrome.notifications.create('lunch', options, notificationCallback)
+		}, 
+		millisTill1030
+	);
+	setTimeout(
+		function(){
+			// @params string,object,function
+			chrome.notifications.create('afternoon', options, notificationCallback)
+		}, 
+		millisTill1515
+	);
+}
+scheduleNotifications()
+
+function notificationCallback(){
+	// not needed for now	
+}
+
+/*
+ * @desc ads event to the buttons in the notification
+ * @param function
+*/
+chrome.notifications.onButtonClicked.addListener(replyBtnClick);
+
+/*
+ * @desc function called on button clicked, handles which button is clicked and then clears it
+ * @param string,int
+*/
+function replyBtnClick(notificationId, btnIdx){
+    if (notificationId === 'lunch' || notificationId === 'afternoon') {
+		if(btnIdx == 0){
+			manageNotificationPersistence(notificationId,1)			
+		} else {
+			manageNotificationPersistence(notificationId,0)			
+		}
+		clearNotification(notificationId)
+	}
+}
+
+/*
+ * @desc clears the notifications
+ * @param string
+*/
+function clearNotification(notificationId){
+	chrome.notifications.clear(notificationId)
+}
+
+/*
+ * @desc saves the activity in notification_info object
+ * @param string, int
+*/
+function manageNotificationPersistence(type,action){
+	if(!notification_info[today]){
+		notification_info[today] = {}
+	}
+	notification_info[today][type] = action;
+	savestored_history();
+}
+
+/*
+ * @desc saves the object notification_info, organized in this format
+ * 15/2/2016: Object
+ * 	 lunch: 1
+ *	 afternoon: 0
+ * @return void 
+*/
+function savestored_history(){
+	chrome.storage.local.set({'notification_info':notification_info}, function () {
+        console.log('Saved', notification_info);
+    });
 }
