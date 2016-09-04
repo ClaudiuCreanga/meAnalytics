@@ -20,6 +20,7 @@
     
 	"permissions": [
 		"activeTab",
+		"notifications",
 		"tabs",
 		"https://ajax.googleapis.com/",
 		"storage"

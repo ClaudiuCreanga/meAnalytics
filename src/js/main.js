@@ -111,6 +111,12 @@ getData();
 
 //chrome.storage.local.clear()
 
+function getModernCheckedByName(context,name){
+    return  Array.prototype.slice.call(document.getElementsByName(name)).filter(function(e){
+        return e.checked;
+    });
+}
+
 //listen to inputs and save the data
 var listenToNewWebsite = function(new_item,index){
 	
@@ -123,8 +129,13 @@ var listenToNewWebsite = function(new_item,index){
 	new_website.addEventListener('keyup', function(){
 		var input_value = this.value;
 		var key = this.parentElement.className;
+		var sibling = this.nextSibling;
+		var swatchChildren = sibling.childNodes;
+		var typeName = swatchChildren[0].getAttribute("name")
+		var checkedType = getModernCheckedByName(swatchChildren,typeName)
 		settings[index].key = key;
 		settings[index].website = input_value;
+		settings[index].type = checkedType[0].className;
 		storeData();
 	},false);
 	
@@ -173,6 +184,9 @@ add_item.addEventListener("click", function(e){
 		inputs[i].id = inputs[i].id.replace(/[0-9]/g, item_number+1);
 		inputs[i].name = inputs[i].name.replace(/[0-9]/g, item_number+1);
 		labels[i].htmlFor = inputs[i].id;
+		if(inputs[i].className == "ignore"){
+			inputs[i].checked = true;
+		}
 	}
 	container_items.appendChild(new_item);
 	listenToNewWebsite(new_item,index);

@@ -1,6 +1,8 @@
-/********** HANDLE THE DATA *************/
+/********** COLLECT AND HANDLE THE DATA *************/
 
-//set up the globals
+/*
+ * @desc set up the globals
+*/
 var	activeUrl = "";
 	ignored_websites = ['newtab','extensions','history','settings'];
 	isUserActive = true;
@@ -22,6 +24,9 @@ function start(){
 }
 start();
 
+/*
+ * @desc get saved data from object stored_history
+*/
 function getSavedData(){
 	chrome.storage.local.get('stored_history',function(object){
 		if(chrome.runtime.lastError){
@@ -34,6 +39,9 @@ function getSavedData(){
 	})
 }
 
+/*
+ * @desc get previous tab url and set it to the global previous_tab variable
+*/
 function getPreviousTab(){
 	chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {	
 		if(arrayOfTabs[0]){
@@ -44,6 +52,7 @@ function getPreviousTab(){
 		}
 	});
 }
+
 /*
  * @desc saves objects based on dates
  * @return a date as 15/2/2016
@@ -80,6 +89,17 @@ function getCurrentHour(){
 
 /*
  * @desc checks the date and processes the data, url and time, calls savestored_history()
+ * the object looks like this:
+ * {
+ *	app.gistboxapp.com:Object
+ *	 	time:41
+ *		timeframe:Object (Array 0-23)
+ *		url:"app.gistboxapp.com"
+ *	developer.chrome.com:Object
+ *		time:690
+ *		timeframe:Object (Array 0-23)
+ *		url:"developer.chrome.com"
+ *	}
  * @param object activeTab - the currently actived tab
 */
 function checkDate(activeTab){
@@ -263,4 +283,12 @@ function getBaseDomain(url) {
 */
 function isInArray(value, array) {
   return array.indexOf(value) > -1;
+}
+
+chrome.notifications.create('exercise',options,callback)
+var options = {
+  type: "basic",
+  title: "Exercise!",
+  message: "Exercise! Time to get up and move a bit.",
+  iconUrl: "../../images/icon48.PNG"
 }
