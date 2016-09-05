@@ -108,7 +108,6 @@ function checkDate(activeTab){
 	if(activeTab){
 		var base_url = getBaseDomain(previous_tab);
 		if(stored_history[today]){
-			console.log(stored_history[today])
 			var formatedTimeframeStart = timeframe_start / 1000;
 			var formatedTimeframeStop = formatedTimeframeStart + timeOnWebsite;
 			if(stored_history[today][base_url]){
@@ -409,7 +408,7 @@ function manageNotificationPersistence(type,action){
 		notification_info[today] = {}
 	}
 	notification_info[today][type] = action;
-	savestored_history();
+	saveNotificationInfo();
 }
 
 /*
@@ -419,7 +418,7 @@ function manageNotificationPersistence(type,action){
  *	 afternoon: 0
  * @return void 
 */
-function savestored_history(){
+function saveNotificationInfo(){
 	chrome.storage.local.set({'notification_info':notification_info}, function () {
         console.log('Saved', notification_info);
     });
