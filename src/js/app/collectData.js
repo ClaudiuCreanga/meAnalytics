@@ -130,6 +130,7 @@ function checkDate(activeTab){
 		}
 		if(!isInArray(base_url,ignored_websites)){
 			savestored_history();
+	        timeOnWebsite = 0;
 		}
 		previous_tab = activeTab.url;
 	}
@@ -162,7 +163,6 @@ function getActiveTab(){
 function savestored_history(){
 	chrome.storage.local.set({'stored_history':stored_history}, function () {
         console.log('Saved', stored_history);
-        timeOnWebsite = 0;
     });
 }
 

@@ -69,7 +69,7 @@ module.exports = function(grunt) {
       }
 	},
 	jshint: {
-      files: ['Gruntfile.js', 'src/js/*.js'],
+      files: ['Gruntfile.js', 'src/js/app/menu/eventListeners.js'],
     }
   });
 
@@ -86,6 +86,7 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', ['cssmin','htmlmin']);
   grunt.registerTask('js', ['concat','uglify']);
+  grunt.registerTask('jshint', ['jshint']);
   grunt.registerTask('css', ['cssmin']);
   grunt.registerTask('html', ['htmlmin']);
 
