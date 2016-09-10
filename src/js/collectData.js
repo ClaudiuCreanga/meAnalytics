@@ -73,7 +73,7 @@ function getToday(){
 function createHoursObject(){
 	var hours = {}
 	for(var i = 0; i < 24; i++){
-		hours[i] = [];
+		hours[i] = 0;
 	}
 	return hours;	
 }
@@ -108,19 +108,18 @@ function checkDate(activeTab){
 	if(activeTab){
 		var base_url = getBaseDomain(previous_tab);
 		if(stored_history[today]){
-			var formatedTimeframeStart = timeframe_start / 1000;
-			var formatedTimeframeStop = formatedTimeframeStart + timeOnWebsite;
+			var currentHour = getCurrentHour();
 			if(stored_history[today][base_url]){
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = parseInt(stored_history[today][base_url]['time'])+timeOnWebsite;
-				stored_history[today][base_url]['timeframe'][getCurrentHour()].push(formatedTimeframeStart+"-"+formatedTimeframeStop);
+				stored_history[today][base_url]['timeframe'][currentHour] = parseInt(stored_history[today][base_url]['timeframe'][currentHour])+timeOnWebsite;
 			}
 			else{
 				stored_history[today][base_url] = {};
 				stored_history[today][base_url]['url'] = base_url;
 				stored_history[today][base_url]['time'] = timeOnWebsite;
 				stored_history[today][base_url]['timeframe'] = createHoursObject()
-				stored_history[today][base_url]['timeframe'][getCurrentHour()].push(formatedTimeframeStart+"-"+formatedTimeframeStop);
+				stored_history[today][base_url]['timeframe'][currentHour] = parseInt(stored_history[today][base_url]['timeframe'][currentHour])+timeOnWebsite;
 			}
 		}else{
 			stored_history[today] = {};
