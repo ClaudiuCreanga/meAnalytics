@@ -389,8 +389,18 @@ function getIndividualWebsiteGraph(website){
 		margin = {top: 20, right: 40, bottom: 20, left: 20},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-		
+/*
+		data = [{
+			date:"Fri Sep 09 2016 23:00:00 GMT+0100 (BST)",
+			time:1132327
+		},{
+			date:"Fri Sep 09 2016 22:00:00 GMT+0100 (BST)",
+			time:11232327
+		}]
+*/
 	data.forEach(type);
+	//console.log(data)
+	
 
 	var x = d3.time.scale()
 	    .range([0, width]);
