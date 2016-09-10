@@ -10,7 +10,6 @@ var	activeUrl = "";
 	today = "";
 	previous_tab = "";
 	stored_history = {};
-	timeframe_start = "";
 	notification_info = {};
 	
 /*
@@ -164,7 +163,6 @@ function savestored_history(){
 	chrome.storage.local.set({'stored_history':stored_history}, function () {
         console.log('Saved', stored_history);
         timeOnWebsite = 0;
-        timeframe_start = +new Date;
     });
 }
 
