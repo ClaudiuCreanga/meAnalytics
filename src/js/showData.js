@@ -75,7 +75,10 @@ function getIgnoredWebsites(){
 	})
 }
 
-//get user settings
+/*
+ * @desc gets the user settings from the stored_settings object
+ * @return null
+*/	
 function getUserSettings(){
 	chrome.storage.local.get('settings',function(object){
 		if(chrome.runtime.lastError){
@@ -103,7 +106,10 @@ function getToday(){
 	return today;
 }
 
-//attach click event on insights
+/*
+ * @desc attach click events on insights graph
+ * @return null
+*/	
 var insights = document.querySelector(".bubble-container");
 insights.addEventListener("click", function(e){
 	d3.select("body")
@@ -133,21 +139,30 @@ insights.addEventListener("click", function(e){
 		
 },false);
 
-//build insights meAnalytics
+/*
+ * @desc build the insights chart
+ * @return null
+*/	
 function buildInsights(){
 	d3.select("#insights")
 		.append("p")
 		.text("this is interesting data")
 }
 
-//attach click on close
+/*
+ * @desc attach click event on close button
+ * @return null
+*/	
 var close_insights = document.querySelector(".bubble-container .close");
 close_insights.addEventListener("click", function(e){
 	insights.style.display = "none";
 },false)
 
 
-//attach click event on general graph
+/*
+ * @desc attach click events on general graph
+ * @return null
+*/	
 var general_graphs = document.querySelector(".general-charts");
 general_graphs.addEventListener("click", function(e){
 	d3.select("#good-bad-chart").remove()
@@ -182,7 +197,6 @@ general_graphs.addEventListener("click", function(e){
 
 //process data for good vs bad websites
 function getGoodBadWebsitesData(){
-	
 	var data = [];
 	for(i in stored_history){
 		time_spent_on_good_websites = 0;
@@ -200,11 +214,19 @@ function getGoodBadWebsitesData(){
 	return data.sort(sortByDateAscending);
 	
 }
+
+/*
+ * @desc sorts an array by date desc.
+ * @param array
+*/
 function sortByDateAscending(a, b) {
     return a.date - b.date;
 }
 
-//build the good bad graph
+/*
+ * @desc builds the good/bad chart
+ * @calls getGoodBadWebsitesData()
+*/
 function getGoodBadGraph(){
 	
 	var	margin = {top: 20, right: 20, bottom: 20, left: 40},
@@ -296,25 +318,16 @@ function getGoodBadGraph(){
 	      .text(function(d) { return d.name; });
 	
 }
+
 /*
  * @desc process the user history and gets time spent on websites
  * @param stored_history
  * @calls createCharts()
 */
-function getTimeSpentOnWebsites(){
-	
+function getTimeSpentOnWebsites(){	
 	var time = new Array;
 	var today = getToday();
-	
-/*
-	
-	for (key of Object.keys(stored_history[today])) {
-		val = stored_history[today][key]['time'];
-	    time.push(val);
-	}
-*/
 	createCharts(d3.entries(stored_history[today]));
-	
 }
 
 /*
@@ -335,9 +348,12 @@ function getWebsiteColor(website){
 	return processColors(color);
 }
 
-
-function getSpecificWebsiteData(website){
-	
+/*
+ * @desc process the time from timeframe property and ads classifies it for every hour in the day.
+ * @param string
+ * @return array of objects
+*/
+function getSpecificWebsiteData(website){	
 	var data = [];
 	for(i in stored_history){
 		var newDateFormat = i.split("/");
@@ -350,37 +366,31 @@ function getSpecificWebsiteData(website){
 						for(var j = 0; j < time_periods[a].length; j++){
 							var time_period = time_periods[a][j].toString().split("-");
 							if(time_period.length > 1 && time_period[0] > 1448842497){ //bigger than 2016
-								time_spent += +time_period[1] - +time_period[0];
-								
+								time_spent += +time_period[1] - +time_period[0];								
 							}
-
-							//console.log(new Date(+time_period[0]))
-							//console.log(new Date(+time_period[0])+" "+time_spent)
-							//var date_format = new Date(specific_date);
-							//console.log(data.date+ " "+data.time)
 						}
-						data.push({'date':new Date(newDateFormat+", "+a+":0:0"),'time':time_spent});					
+						data.push({'date':new Date(newDateFormat+", "+a+":0:0"),'time':time_spent});	
 					}
 				}
 			}
 		}
-	}
-	///console.log(data)
-
+	}	
 	return data;	
 }
 
+/*
+ * @desc creates the chart for a specific website. values are taken from @getSpecificWebsiteData
+ * @param string
+ * @return void
+*/
 function getIndividualWebsiteGraph(website){
 	
 	var data = getSpecificWebsiteData(website)
 		margin = {top: 20, right: 40, bottom: 20, left: 20},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-		//var parse = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
 		
 	data.forEach(type);
-			//console.log(data)
-
 
 	var x = d3.time.scale()
 	    .range([0, width]);
