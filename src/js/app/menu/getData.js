@@ -1,7 +1,8 @@
 define([
-		"storeData"
+		"createMenu",
+		"eventListeners"
 	], 
-	function (storeData) {
+	function (createMenu,eventListeners) {
 	    return {
 			getData: function(){
 		        //get previously saved websites
@@ -13,11 +14,11 @@ define([
 					if(stored_data){
 						if(Object.keys(stored_data).length){
 							settings = stored_data['settings'];
-							createFromSettings(settings);
+							createMenu.createFromSettings(settings);
 						}
 						else{
 							settings.website1 = {};
-							listenToNewWebsite(first_item);
+							eventListeners.listenToNewWebsite(first_item);
 						}
 					}
 				});	

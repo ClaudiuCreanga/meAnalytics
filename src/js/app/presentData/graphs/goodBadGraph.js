@@ -6,15 +6,15 @@ define([
 		    getGoodBadWebsitesData: function(){
 			    //process data for good vs bad websites
 		    	var data = [];
-				for(i in stored_history){
+				for(i in window.stored_history){
 					time_spent_on_good_websites = 0;
 					time_spent_on_bad_websites = 0;
-					for(key of Object.keys(stored_history[i])){			
-						if(helpers.isInArray(stored_history[i][key]['url'],good_websites)){
-							time_spent_on_good_websites += stored_history[i][key]['time']
+					for(key of Object.keys(window.stored_history[i])){			
+						if(helpers.isInArray(window.stored_history[i][key]['url'],window.good_websites)){
+							time_spent_on_good_websites += window.stored_history[i][key]['time']
 						}
-						else if(helpers.isInArray(stored_history[i][key]['url'],bad_websites)){
-							time_spent_on_bad_websites += stored_history[i][key]['time']
+						else if(helpers.isInArray(window.stored_history[i][key]['url'],window.bad_websites)){
+							time_spent_on_bad_websites += window.stored_history[i][key]['time']
 						}
 					}
 					data.push({'date':new Date(i),'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});

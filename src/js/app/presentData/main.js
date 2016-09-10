@@ -6,19 +6,21 @@ define([
 		/********** SHOW THE DATA *************/
 		
 		//set up the globals
-		var settings = {}
-			stored_history = {}
-			ignored_websites = ['newtab','extensions','history','settings']
-			good_websites = []
-			bad_websites = []
+	 	window.settings = {};
+		window.stored_history = {};
+		window.ignored_websites = ['newtab','extensions','history','settings'];
+		window.good_websites = [];
+		window.bad_websites = [];
 			
+		//helpers.clearSavedData("stored_history");
+		
 		/*
 		 * @desc boot up the whole thing
 		*/
 		function start(){
 			getStoredHistory();
 			getUserSettings();
-			getIgnoredWebsites();
+			getWebsiteTypes();
 		}
 		start();
 		
@@ -35,8 +37,9 @@ define([
 				}
 				var stored_data = object;
 				if(stored_data){
+					console.log(stored_data)
 					if(Object.keys(stored_data).length){
-						stored_history = stored_data['stored_history'];
+						window.stored_history = stored_data['stored_history'];
 						getTimeSpentOnWebsites();
 					}
 					else{
@@ -49,12 +52,12 @@ define([
 		}
 		
 		/*
-		 * @desc gets the ignored websites set up by user in settings.
+		 * @desc gets websites types set up by user in settings.
 		 * Pusshes the websites into a global array ignored_websites
 		 * @requires object settings from main.js
 		 * @return void
 		*/
-		function getIgnoredWebsites(){
+		function getWebsiteTypes(){
 			chrome.storage.local.get('settings',function(object){
 				if(chrome.runtime.lastError){
 					console.log("Runtime error.");
@@ -65,13 +68,13 @@ define([
 						for(i in stored_settings){
 							for(var key in stored_settings[i]){	
 								if(stored_settings[i][key]['type'] == 'ignore'){
-									ignored_websites.push(stored_settings[i][key]["website"]);
+									window.ignored_websites.push(stored_settings[i][key]["website"]);
 								}
 								else if(stored_settings[i][key]['type'] == 'good'){
-									good_websites.push(stored_settings[i][key]["website"]);
+									window.good_websites.push(stored_settings[i][key]["website"]);
 								}
 								else if(stored_settings[i][key]['type'] == 'bad'){
-									bad_websites.push(stored_settings[i][key]["website"]);
+									window.bad_websites.push(stored_settings[i][key]["website"]);
 								}
 							}
 						}
@@ -106,7 +109,7 @@ define([
 		function getTimeSpentOnWebsites(){	
 			var time = new Array;
 			var today = helpers.getToday();
-			mainBarChart.createCharts(d3.entries(stored_history[today]));
+			mainBarChart.createCharts(d3.entries(window.stored_history[today]));
 		}
 	}
 );

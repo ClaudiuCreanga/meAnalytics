@@ -10,12 +10,12 @@ define([
 			*/
 			getSpecificWebsiteData: function(website){	
 				var data = [];
-				for(i in stored_history){
+				for(i in window.stored_history){
 					var newDateFormat = i.split("/");
-					for(key of Object.keys(stored_history[i])){
-						if(stored_history[i][key]['url'] == website){
-							if(stored_history[i][key]['timeframe']){
-								var time_periods = stored_history[i][key]['timeframe'];
+					for(key of Object.keys(window.stored_history[i])){
+						if(window.stored_history[i][key]['url'] == website){
+							if(window.stored_history[i][key]['timeframe']){
+								var time_periods = window.stored_history[i][key]['timeframe'];
 								for(var j = 0; j < Object.keys(time_periods).length; j++){
 									data.push({'date':new Date(newDateFormat+", "+j+":0:0"),'time':time_periods[j]});	
 								}
@@ -36,7 +36,7 @@ define([
 					margin = {top: 20, right: 40, bottom: 20, left: 20},
 					width = 960 - margin.left - margin.right,
 					height = 500 - margin.top - margin.bottom;
-			
+			console.log(data)
 				data.forEach(type);
 			
 				var x = d3.time.scale()
@@ -128,6 +128,7 @@ define([
 					d.date = new Date(d.date);
 					return d;
 				}	
+			}
 		};
 	}
 );

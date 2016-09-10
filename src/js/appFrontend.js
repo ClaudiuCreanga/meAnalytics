@@ -6,7 +6,6 @@ requirejs.config({
         removeItem: 'menu/removeItem',
         createMenu: 'menu/createMenu',
         eventListeners: 'menu/eventListeners',
-        storeData: 'storeData',
         helpers: 'helpers',
         presentData: 'presentData/main',
         goodBadGraph: 'presentData/graphs/goodBadGraph',
@@ -16,6 +15,4 @@ requirejs.config({
         graphsEventListeners: 'presentData/eventListeners'
     }
 });
-requirejs(['d3']);
-requirejs(['menu']);
-requirejs(['presentData']);
+requirejs(['d3','menu','presentData']);

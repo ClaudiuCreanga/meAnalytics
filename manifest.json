@@ -15,7 +15,7 @@
     },
     
     "background": {
-        "scripts": ["src/js/app/collectData.js"]
+        "scripts": ["src/js/lib/require.js","src/js/appBackground.js"]
     },
     
 	"permissions": [

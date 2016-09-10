@@ -3,11 +3,8 @@ define([
 		"eventListeners"
 	], 
 	function (createMenu,eventListeners) {
-				    						console.log("nu")
 
-
-			settings = {};
-
+			window.settings = {};
 			//get previously saved websites
 			function getData(){
 				chrome.storage.local.get('settings',function(object){

@@ -1,9 +1,8 @@
 define([
-		"storeData",
 		"removeItem",
 		"helpers"
 	], 
-	function (storeData,removeItem,helpers) {
+	function (removeItem,helpers) {
 	    return {
 		    websites: function(){
 			    return document.querySelector('.websites');
@@ -11,9 +10,9 @@ define([
 			listenToNewWebsite: function(new_item,index){
 				//listen to inputs and save the data
 				if (typeof index === 'undefined'){
-					index = 'website1';
+					var index = 'website1';
 				}
-				
+				console.log(window.settings)
 				var new_website = new_item.querySelector('.website');
 					
 				new_website.addEventListener('keyup', function(){
@@ -23,10 +22,10 @@ define([
 					var swatchChildren = sibling.childNodes;
 					var typeName = swatchChildren[0].getAttribute("name")
 					var checkedType = helpers.getModernCheckedByName(swatchChildren,typeName)
-					settings[index].key = key;
-					settings[index].website = input_value;
-					settings[index].type = checkedType[0].className;
-					storeData.storeData();
+					window.settings[index].key = key;
+					window.settings[index].website = input_value;
+					window.settings[index].type = checkedType[0].className;
+					helpers.saveChromeLocalStorage('settings',window.settings);
 				},false);
 				
 				var options = ["good","ignore","bad"];
@@ -34,8 +33,8 @@ define([
 				for(var i, i = 0; i < options.length; i++){
 					new_item.querySelector('.'+options[i]).addEventListener('click', function(){
 						if(this.checked){
-							settings[index].type = this.className;
-							storeData.storeData();
+							window.settings[index].type = this.className;
+							helpers.saveChromeLocalStorage('settings',window.settings);
 						}
 					});
 				};
@@ -51,7 +50,7 @@ define([
 						index = "website"+(item_number+1);
 						new_item = item.cloneNode(true);
 						
-					settings[index] = {};
+					window.settings[index] = {};
 					
 					new_item.className = new_item.className.replace(/[0-9]/g,item_number+1);
 					var labels_inputs = new_item.querySelector('.switch');

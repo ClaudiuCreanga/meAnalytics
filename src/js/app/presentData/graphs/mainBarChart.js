@@ -1,7 +1,8 @@
 define([
-		"helpers"
+		"helpers",
+		"individualWebsiteGraph"
 	], 
-	function (helpers) {
+	function (helpers,individualWebsiteGraph) {
 	    return {
 		    /*
 			 * @desc process the website and gives the color based on type property.
@@ -9,13 +10,13 @@ define([
 			 * @return string
 			*/
 			getWebsiteColor: function(website){
-				for(key of Object.keys(settings)){
-					if(settings[key]['website'] == website){
-						color = settings[key]['type'];
+				for(key of Object.keys(window.settings)){
+					if(window.settings[key]['website'] == website){
+						var color = window.settings[key]['type'];
 						break;
 					}
 					else{
-						color = "neutral";
+						var color = "neutral";
 					}
 				}
 				return this.processColors(color);
@@ -42,7 +43,7 @@ define([
 				_this = this;
 				//remove ignored websites
 				for(var key in all_data){
-					if(helpers.isInArray(all_data[key]['key'],ignored_websites)){
+					if(helpers.isInArray(all_data[key]['key'],window.ignored_websites)){
 						all_data.splice(key,1);
 					}
 				}
@@ -105,7 +106,7 @@ define([
 					    	.append("p")
 					    	.text(all_data[i].key +" ("+ +(all_data[i].value.time / 60).toFixed(1)+" minutes today, you can click on this graph to zoom)")
 					    	.call(function(){
-						    	getIndividualWebsiteGraph(all_data[i].key)
+						    	individualWebsiteGraph.getIndividualWebsiteGraph(all_data[i].key)
 					    	})
 					    d3.select("#individual-website")
 					    	.append("button")

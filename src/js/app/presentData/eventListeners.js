@@ -1,9 +1,8 @@
 define([
-		"storeData",
 		"removeItem",
 		"helpers"
 	], 
-	function (storeData,removeItem,helpers) {
+	function (removeItem,helpers) {
 	    return {
 		    /*
 			 * @desc attach click events on general graph
