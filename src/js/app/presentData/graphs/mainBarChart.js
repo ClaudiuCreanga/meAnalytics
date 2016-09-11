@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"helpers",
 		"individualWebsiteGraph"
@@ -10,7 +11,7 @@ define([
 			 * @return string
 			*/
 			getWebsiteColor: function(website){
-				for(key of Object.keys(window.settings)){
+				for(var key of Object.keys(window.settings)){
 					if(window.settings[key]['website'] == website){
 						var color = window.settings[key]['type'];
 						break;
@@ -30,7 +31,7 @@ define([
 				var good = "#418486";
 				var bad = "#9A3334";
 				var neutral = "#EFEFEF";
-				type = color == "bad" ? bad : (color == "good" ? good : neutral);
+				var type = color == "bad" ? bad : (color == "good" ? good : neutral);
 				return type; 
 			},
 			/*
@@ -40,7 +41,7 @@ define([
 			*/
 			createCharts: function(all_data){
 			
-				_this = this;
+				var _this = this;
 				//remove ignored websites
 				for(var key in all_data){
 					if(helpers.isInArray(all_data[key]['key'],window.ignored_websites)){

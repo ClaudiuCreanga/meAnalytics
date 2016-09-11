@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"removeItem",
 		"helpers"
@@ -12,7 +13,6 @@ define([
 				if (typeof index === 'undefined'){
 					var index = 'website1';
 				}
-				console.log(window.settings)
 				var new_website = new_item.querySelector('.website');
 					
 				new_website.addEventListener('keyup', function(){
@@ -20,8 +20,8 @@ define([
 					var key = this.parentElement.className;
 					var sibling = this.nextSibling;
 					var swatchChildren = sibling.childNodes;
-					var typeName = swatchChildren[0].getAttribute("name")
-					var checkedType = helpers.getModernCheckedByName(swatchChildren,typeName)
+					var typeName = swatchChildren[0].getAttribute("name");
+					var checkedType = helpers.getModernCheckedByName(swatchChildren,typeName);
 					window.settings[index].key = key;
 					window.settings[index].website = input_value;
 					window.settings[index].type = checkedType[0].className;
@@ -45,18 +45,18 @@ define([
 				document.querySelector('.add-item').addEventListener("click", function(e){
 					
 					var items = document.querySelectorAll('.item');
-						item = items[items.length - 1];
-						item_number = parseInt(item.className.match(/\d+$/));
-						index = "website"+(item_number+1);
-						new_item = item.cloneNode(true);
+					var item = items[items.length - 1];
+					var item_number = parseInt(item.className.match(/\d+$/));
+					var index = "website"+(item_number+1);
+					var new_item = item.cloneNode(true);
 						
 					window.settings[index] = {};
 					
 					new_item.className = new_item.className.replace(/[0-9]/g,item_number+1);
 					var labels_inputs = new_item.querySelector('.switch');
-						labels = labels_inputs.getElementsByTagName('label');
-						inputs = labels_inputs.getElementsByTagName('input');
-						removable_item = new_item.querySelector('.remove-item');
+					var labels = labels_inputs.getElementsByTagName('label');
+					var inputs = labels_inputs.getElementsByTagName('input');
+					var removable_item = new_item.querySelector('.remove-item');
 					removeItem.remove_item(removable_item,index);
 					
 					new_item.querySelector('.website').value = ''; //don't copy input value

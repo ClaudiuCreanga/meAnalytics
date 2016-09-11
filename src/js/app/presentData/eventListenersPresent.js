@@ -1,8 +1,11 @@
+"use strict";
 define([
 		"removeItem",
-		"helpers"
+		"helpers",
+		"goodBadGraph",
+		"insightsChart"
 	], 
-	function (removeItem,helpers) {
+	function (removeItem,helpers,goodBadGraph,insightsChart) {
 	    return {
 		    /*
 			 * @desc attach click events on general graph
@@ -18,7 +21,7 @@ define([
 						.append("p")
 						.text("good vs bad websites")
 						.call(function(){
-					    	getGoodBadGraph()
+					    	goodBadGraph.getGoodBadGraph()
 						})
 				    d3.select("#good-bad-chart")
 					.append("button")
@@ -48,6 +51,7 @@ define([
 			attachClickOnClose: function(){
 				var close_insights = document.querySelector(".bubble-container .close");
 				close_insights.addEventListener("click", function(e){
+					var insights = document.querySelector(".bubble-container");
 					insights.style.display = "none";
 				},false);
 			},
@@ -64,7 +68,7 @@ define([
 						.append("p")
 						.text("meAnalytics")
 						.call(function(){
-					    	buildInsights()
+					    	insightsChart.buildInsights()
 						});
 				    d3.select("#insights")
 					.append("button")

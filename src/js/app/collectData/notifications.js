@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"helpers"
 	], 
@@ -49,7 +50,7 @@ define([
 			 * @desc creates and schedules 2 exercise notifications, 1 at lunch, 1 in the afternoon, and one sleep notification that will remind me to exercise more at a particular time of the day and to got to sleep.
 			*/
 			scheduleNotifications: function(){
-				_this = this;
+				var _this = this;
 				/*
 				 * @desc ads event to the buttons in the notification
 				 * @param function

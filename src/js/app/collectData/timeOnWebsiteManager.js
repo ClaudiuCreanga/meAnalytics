@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"helpers"
 	], 
@@ -47,6 +48,7 @@ define([
 						
 					}
 					if(!helpers.isInArray(base_url,ignored_websites)){
+						console.log(window.stored_history)
 						helpers.saveChromeLocalStorage("stored_history",window.stored_history);
 				        window.timeOnWebsite = 0;
 					}

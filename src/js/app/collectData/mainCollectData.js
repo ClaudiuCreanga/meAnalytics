@@ -1,4 +1,5 @@
 /********** COLLECT AND HANDLE THE DATA *************/
+"use strict";
 define([
 		"helpers",
 		"registerEvents",

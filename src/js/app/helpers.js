@@ -6,8 +6,10 @@ define(function () {
 		 * @return void 
 		*/
 		saveChromeLocalStorage: function(objectName,objectData){
-			chrome.storage.local.set({objectName:objectData}, function () {
-		        console.log('Saved', objectData);
+			var data = {};
+			data[objectName] = objectData;
+			chrome.storage.local.set(data, function () {
+		        console.log('Saved', data);
 		    });
 		},
         getModernCheckedByName: function(context,name){

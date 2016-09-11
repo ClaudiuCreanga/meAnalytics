@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"helpers"
 	], 
@@ -6,10 +7,10 @@ define([
 		    getGoodBadWebsitesData: function(){
 			    //process data for good vs bad websites
 		    	var data = [];
-				for(i in window.stored_history){
-					time_spent_on_good_websites = 0;
-					time_spent_on_bad_websites = 0;
-					for(key of Object.keys(window.stored_history[i])){			
+				for(var i in window.stored_history){
+					var time_spent_on_good_websites = 0;
+					var time_spent_on_bad_websites = 0;
+					for(var key of Object.keys(window.stored_history[i])){			
 						if(helpers.isInArray(window.stored_history[i][key]['url'],window.good_websites)){
 							time_spent_on_good_websites += window.stored_history[i][key]['time']
 						}
@@ -19,16 +20,16 @@ define([
 					}
 					data.push({'date':new Date(i),'Good Websites':+(time_spent_on_good_websites / 3600).toFixed(1), 'Bad Websites':+(time_spent_on_bad_websites / 3600).toFixed(1)});
 				}
-				return data.sort(sortByDateAscending);	
+				return data.sort(helpers.sortByDateAscending);	
 			},
 	        getGoodBadGraph: function(){
 				/*
 				 * @desc builds the good/bad chart
 				 * @calls getGoodBadWebsitesData()
 				*/
-				var	margin = {top: 20, right: 20, bottom: 20, left: 40},
-					width = 960 - margin.left - margin.right,
-					height = 500 - margin.top - margin.bottom;
+				var	margin = {top: 20, right: 20, bottom: 20, left: 40};
+				var	width = 960 - margin.left - margin.right;
+				var	height = 500 - margin.top - margin.bottom;
 					
 				var	data = this.getGoodBadWebsitesData();
 				if(data.length < 2){
@@ -114,7 +115,7 @@ define([
 				      .attr("dy", ".35em")
 				      .text(function(d) { return d.name; });
 				
-				}
+				
 			}
 	    };
 	}

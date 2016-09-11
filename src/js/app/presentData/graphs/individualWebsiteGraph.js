@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"helpers"
 	], 
@@ -10,9 +11,9 @@ define([
 			*/
 			getSpecificWebsiteData: function(website){	
 				var data = [];
-				for(i in window.stored_history){
+				for(var i in window.stored_history){
 					var newDateFormat = i.split("/");
-					for(key of Object.keys(window.stored_history[i])){
+					for(var key of Object.keys(window.stored_history[i])){
 						if(window.stored_history[i][key]['url'] == website){
 							if(window.stored_history[i][key]['timeframe']){
 								var time_periods = window.stored_history[i][key]['timeframe'];
@@ -32,11 +33,11 @@ define([
 			*/
 			getIndividualWebsiteGraph: function(website){
 				
-				var data = this.getSpecificWebsiteData(website)
-					margin = {top: 20, right: 40, bottom: 20, left: 20},
-					width = 960 - margin.left - margin.right,
-					height = 500 - margin.top - margin.bottom;
-			console.log(data)
+				var data = this.getSpecificWebsiteData(website);
+				var margin = {top: 20, right: 40, bottom: 20, left: 20};
+				var width = 960 - margin.left - margin.right;
+				var height = 500 - margin.top - margin.bottom;
+
 				data.forEach(type);
 			
 				var x = d3.time.scale()

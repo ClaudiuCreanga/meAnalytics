@@ -1,3 +1,4 @@
+"use strict";
 define([
 		"createMenu",
 		"eventListeners"
@@ -18,6 +19,7 @@ define([
 							createMenu.createFromSettings(settings);
 						}
 						else{
+							console.log(settings)
 							settings.website1 = {};
 							eventListeners.listenToNewWebsite(document.querySelector('.list-items .website-1'));
 						}
@@ -29,7 +31,3 @@ define([
 			eventListeners.attachClickEventsOnInputs();
 	}
 );
-
-
-
-

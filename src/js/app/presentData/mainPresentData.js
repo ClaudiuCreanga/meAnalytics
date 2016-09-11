@@ -1,8 +1,10 @@
+"use strict";
 define([
 		"helpers",
-		"mainBarChart"
+		"mainBarChart",
+		"eventListenersPresent"
 	], 
-	function (helpers,mainBarChart) {
+	function (helpers,mainBarChart,eventListenersPresent) {
 		/********** SHOW THE DATA *************/
 		
 		//set up the globals
@@ -21,6 +23,9 @@ define([
 			getStoredHistory();
 			getUserSettings();
 			getWebsiteTypes();
+			eventListenersPresent.attachClickOnGeneralGraph();
+			eventListenersPresent.attachClickOnInsights();
+			eventListenersPresent.attachClickOnClose();
 		}
 		start();
 		
@@ -65,7 +70,7 @@ define([
 				var stored_settings = object;
 				if(stored_settings){
 					if(Object.keys(stored_settings).length){
-						for(i in stored_settings){
+						for(var i in stored_settings){
 							for(var key in stored_settings[i]){	
 								if(stored_settings[i][key]['type'] == 'ignore'){
 									window.ignored_websites.push(stored_settings[i][key]["website"]);

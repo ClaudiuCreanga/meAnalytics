@@ -7,12 +7,12 @@ requirejs.config({
         createMenu: 'menu/createMenu',
         eventListeners: 'menu/eventListeners',
         helpers: 'helpers',
-        presentData: 'presentData/main',
+        presentData: 'presentData/mainPresentData',
         goodBadGraph: 'presentData/graphs/goodBadGraph',
         individualWebsiteGraph: 'presentData/graphs/individualWebsiteGraph',
         mainBarChart: 'presentData/graphs/mainBarChart',
         insightsChart: 'presentData/graphs/insightsChart',
-        graphsEventListeners: 'presentData/eventListeners'
+        eventListenersPresent: 'presentData/eventListenersPresent'
     }
 });
 requirejs(['d3','menu','presentData']);
