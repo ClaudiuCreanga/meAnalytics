@@ -7,7 +7,9 @@ define([
 		"notifications"
 	], 
 	function (helpers,registerEvents,chromeManageTabs,notifications) {
-//helpers.clearSavedData("stored_history")
+		
+		//helpers.clearSavedData("stored_history")
+
 		/*
 		 * @desc set up the globals
 		*/

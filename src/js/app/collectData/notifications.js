@@ -72,22 +72,23 @@ define([
 				}
 				setTimeout(
 					function(){
+						console.log(_this.optionsExercise)
 						// @params string,object,function
-						chrome.notifications.create('lunch', _this.optionsExercise, notificationCallback)
+						chrome.notifications.create('lunch', _this.optionsExercise(), _this.notificationCallback())
 					}, 
 					millisTill1030
 				);
 				setTimeout(
 					function(){
 						// @params string,object,function
-						chrome.notifications.create('afternoon', _this.optionsExercise, notificationCallback)
+						chrome.notifications.create('afternoon', _this.optionsExercise(), _this.notificationCallback())
 					}, 
 					millisTill1515
 				);
 				setTimeout(
 					function(){
 						// @params string,object,function
-						chrome.notifications.create('sleep', _this.optionsSleep, notificationCallback)
+						chrome.notifications.create('sleep', _this.optionsSleep(), _this.notificationCallback())
 					}, 
 					millisTill2340
 				);
