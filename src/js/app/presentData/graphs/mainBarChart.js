@@ -11,7 +11,9 @@ define([
 			 * @return string
 			*/
 			getWebsiteColor: function(website){
+				console.log(window.settings)
 				for(var key of Object.keys(window.settings)){
+					console.log(window.settings[key]['website']);
 					if(window.settings[key]['website'] == website){
 						var color = window.settings[key]['type'];
 						break;

@@ -68,6 +68,15 @@ module.exports = function(grunt) {
 	      tasks: ['html']
       }
 	},
+	requirejs: {
+	  compile: {
+	    options: {
+	      baseUrl: 'src/js/app',
+	      mainConfigFile: 'src/js/appFrontend.js',
+	      out: 'dist/meAnalytics.js'
+	    }
+	  }
+	},
 	jshint: {
       files: ['Gruntfile.js', 'src/js/app/menu/eventListeners.js'],
     }
@@ -80,12 +89,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
 
 
   // Default task(s).
-  grunt.registerTask('default', ['cssmin','htmlmin']);
+  grunt.registerTask('default', ['cssmin','htmlmin','concat','uglify']);
   grunt.registerTask('js', ['concat','uglify']);
+  grunt.registerTask('requirejs', ['requirejs']);
   grunt.registerTask('jshint', ['jshint']);
   grunt.registerTask('css', ['cssmin']);
   grunt.registerTask('html', ['htmlmin']);

@@ -20,11 +20,11 @@ define([
 		 * @desc boot up the whole thing
 		*/
 		function start(){
-			getStoredHistory();
 			getUserSettings();
+			getStoredHistory();
 			getWebsiteTypes();
 			eventListenersPresent.attachClickOnGeneralGraph();
-			eventListenersPresent.attachClickOnInsights();
+			//eventListenersPresent.attachClickOnInsights();
 			eventListenersPresent.attachClickOnClose();
 		}
 		start();

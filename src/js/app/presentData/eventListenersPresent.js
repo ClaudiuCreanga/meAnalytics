@@ -36,11 +36,13 @@ define([
 						.duration(1500)
 						.style('opacity',1);
 						
+/*
 					setTimeout(function(){
 						d3.select(".bubble-container").transition()
 							.duration(1000)
 							.style('display','block')
 					}, 2000);
+*/
 					
 				},false)
 			},
